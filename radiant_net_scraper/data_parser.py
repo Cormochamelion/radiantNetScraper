@@ -36,7 +36,9 @@ def parse_file(filepath: str) -> pd.DataFrame:
 
 
 def main():
-    parse_file("20240508.json")
+    infilepath = "20240508.json"
+    outfilepath = infilepath[:-4] + "csv"
+    parse_file(infilepath).to_csv(outfilepath)
 
 
 if __name__ == "__main__":
