@@ -43,7 +43,7 @@ def get_secrets_from_env() -> dict:
     return secrets
 
 
-def main():
+def main(output_dir: str = "./"):
     load_dotenv()
 
     secrets = get_secrets_from_env()
@@ -52,7 +52,6 @@ def main():
 
     json_out = scrape_daily_data(secrets, yesterday)
 
-    output_dir = "./"
     output_file = output_dir + yesterday.strftime("%Y%m%d.json")
 
     with open(output_file, "w") as outfile:
