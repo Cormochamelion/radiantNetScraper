@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+import os
+import re
 
 
 def parse_file(filepath: str) -> pd.DataFrame:
@@ -40,10 +42,30 @@ def parse_file(filepath: str) -> pd.DataFrame:
     return pd.DataFrame(data_cols)
 
 
+def is_daily_json_file(path: str) -> bool:
+    """
+    Check if a path points to a downloaded JSON file from the filename alone.
+    """
+    daily_json_re = re.compile(r"^[0-9]{8}\.json$")
+    basename = os.path.basename(path)
+
+    return os.path.isfile(path) and re.match(daily_json_re, basename) is not None
+
+
+def get_json_list(dir: str) -> list[str]:
+    """
+    Find all the downloaded json files in a given dir and return them as a list.
+    """
+    paths = [os.path.join(dir, path) for path in os.listdir(dir)]
+    return [*filter(is_daily_json_file, paths)]
+
+
 def main():
-    infilepath = "20240508.json"
-    outfilepath = infilepath[:-4] + "csv"
-    parse_file(infilepath).to_csv(outfilepath)
+    infilepaths = get_json_list(".")
+    outfilepaths = map(lambda path: path[:-4] + "csv", infilepaths)
+
+    for inpath, outpath in zip(infilepaths, outfilepaths):
+        parse_file(inpath).to_csv(outpath)
 
 
 if __name__ == "__main__":
