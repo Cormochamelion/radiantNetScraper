@@ -38,9 +38,7 @@ def get_secrets_from_env() -> dict:
     if None in secrets.values():
         none_secrets = ", ".join([x[0] for x in secrets.items() if x[1] is None])
 
-        raise Exception(
-            f"Fields {none_secrets} were not filled. Check your .env " f"file."
-        )
+        raise Exception(f"Fields {none_secrets} were not filled. Check your .env file.")
 
     return secrets
 
