@@ -5,9 +5,9 @@ get the data for the standard dayly plot of production, use, and battery level f
 previous day, and dump them to a timestamped JSON file.
 """
 
+import argparse
 import os
 import json
-import sys
 import datetime as dt
 from dotenv import load_dotenv
 
@@ -60,6 +60,29 @@ def main(output_dir: str = "./", days_ago: int = 1):
 
 
 if __name__ == "__main__":
-    args = [*sys.argv][1:]
+    argparser = argparse.ArgumentParser(
+        "Fronius Solarweb Scraper",
+        description=(
+            "Scrape daily JSON generation & usage stats from Fronius Solarweb."
+        ),
+    )
+    argparser.add_argument(
+        "--output-dir",
+        "-o",
+        default="./",
+        help="Where to put output files (default: %(default)s)",
+    )
+    argparser.add_argument(
+        "--days-ago",
+        "-n",
+        default=1,
+        help=(
+            "The data of how many days ago should be scraped (default: %(default)s). "
+            "Note that for non-premium users only the previous two days are available, "
+            "and that the current day contains incomplete data."
+        ),
+    )
 
-    main(*args)
+    args = argparser.parse_args()
+
+    main(**vars(args))
