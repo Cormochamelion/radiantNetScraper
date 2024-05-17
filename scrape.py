@@ -25,9 +25,10 @@ def scrape_daily_data(secrets: dict, date: dt.date) -> dict:
     return json.dumps(fsession.get_chart(date=date))
 
 
-def main():
-    load_dotenv()
-
+def get_secrets_from_env() -> dict:
+    """
+    Obtain a dict of required secrets from the environment.
+    """
     secrets = {
         "username": os.getenv("username"),
         "password": os.getenv("password"),
@@ -40,6 +41,14 @@ def main():
         raise Exception(
             f"Fields {none_secrets} were not filled. Check your .env " f"file."
         )
+
+    return secrets
+
+
+def main():
+    load_dotenv()
+
+    secrets = get_secrets_from_env()
 
     yesterday = dt.date.today() - dt.timedelta(days=1)
 
