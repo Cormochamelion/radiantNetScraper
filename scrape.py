@@ -9,7 +9,7 @@ import argparse
 from fronius_scraper.scrape import run_scraper
 
 
-if __name__ == "__main__":
+def main():
     argparser = argparse.ArgumentParser(
         "Fronius Solarweb Scraper",
         description=(
@@ -36,3 +36,7 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     run_scraper(**vars(args))
+
+
+if __name__ == "__main__":
+    main()
