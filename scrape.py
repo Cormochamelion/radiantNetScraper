@@ -45,6 +45,9 @@ def get_secrets_from_env() -> dict:
 
 
 def run_scraper(output_dir: str = "./", days_ago: int = 1):
+    """
+    Load required secrets and save the daily usage data to an output dir.
+    """
     load_dotenv()
 
     secrets = get_secrets_from_env()
