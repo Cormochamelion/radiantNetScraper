@@ -1,10 +1,10 @@
 beautifulsoup4==4.11.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
--e git+https://github.com/cormochamelion/fronius-scraping@a71b7d9c2bd867a380286a9b2bcf4ac239edce68#egg=fronius_scraper&subdirectory=fronius_scraper
+-e git+https://github.com/cormochamelion/fronius-scraping@744d10af8dc331d3bfc7ec032ae2f37c199af256#egg=fronius_scraper&subdirectory=fronius_scraper
 idna==3.7
 lxml==4.9.4
 python-dotenv==0.21.1
-requests==2.28.2
+requests==2.31.0
 soupsieve==2.5
 urllib3==1.26.18
