@@ -26,7 +26,7 @@ def main():
         none_secrets = ", ".join([x[0] for x in secrets.items() if x[1] is None])
 
         raise Exception(
-            f"Fields {none_secrets} where not filled. Check your .env " f"file."
+            f"Fields {none_secrets} were not filled. Check your .env " f"file."
         )
 
     fsession = FroniusSession(
