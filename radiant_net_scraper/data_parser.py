@@ -12,6 +12,11 @@ def parse_file(filepath: str) -> pd.DataFrame:
     with open(filepath) as infile:
         json_data = json.load(infile)
 
+    # Check if the file contains data, or if it is too old and has been paywalled.
+    if json_data["isPremiumFeature"]:
+        # We can't extract any data, hence an empty df.
+        return pd.DataFrame()
+
     data_series = json_data["settings"]["series"]
 
     series_data = {
