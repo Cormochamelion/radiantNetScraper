@@ -4,7 +4,7 @@ dependencies = [
     "beautifulsoup4==4.11.*",
     "lxml==4.9.*",
     "python-dotenv==0.21.*",
-    "requests==2.28.*",
+    "requests==2.31.*",
 ]
 name = "fronius-scraper"
 version = "0.1.0"
