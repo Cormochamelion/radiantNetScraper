@@ -7,6 +7,7 @@ previous day, and dump them to a timestamped JSON file.
 
 import os
 import json
+import sys
 import datetime as dt
 from dotenv import load_dotenv
 
@@ -59,4 +60,6 @@ def main(output_dir: str = "./"):
 
 
 if __name__ == "__main__":
-    main()
+    args = [*sys.argv][1:]
+
+    main(*args)
