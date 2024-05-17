@@ -44,7 +44,7 @@ def get_secrets_from_env() -> dict:
     return secrets
 
 
-def main(output_dir: str = "./", days_ago: int = 1):
+def run_scraper(output_dir: str = "./", days_ago: int = 1):
     load_dotenv()
 
     secrets = get_secrets_from_env()
@@ -85,4 +85,4 @@ if __name__ == "__main__":
 
     args = argparser.parse_args()
 
-    main(**vars(args))
+    run_scraper(**vars(args))
