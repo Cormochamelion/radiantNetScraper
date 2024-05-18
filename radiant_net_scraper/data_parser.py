@@ -10,6 +10,7 @@ def parse_file(filepath: str) -> pd.DataFrame:
     data frame with columns corresponding to the types of data available and each
     row giving the time point of recording.
     """
+    # TODO Validate againts a schema to detect if the format has changed.
     # TODO Handle IO errors
     with open(filepath) as infile:
         json_data = json.load(infile)
