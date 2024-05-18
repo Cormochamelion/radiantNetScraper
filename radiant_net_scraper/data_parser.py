@@ -1,3 +1,4 @@
+import datetime as dt
 import pandas as pd
 import json
 import os
@@ -40,7 +41,21 @@ def parse_file(filepath: str) -> pd.DataFrame:
 
     data_cols["time"] = time_col
 
-    return pd.DataFrame(data_cols)
+    # Create accessible datetime objects by converting milisecond count from time col
+    # to POSIX second count.
+    time_objs = [dt.datetime.fromtimestamp(timestamp / 1e3) for timestamp in time_col]
+
+    usage_df = pd.DataFrame(data_cols)
+
+    usage_df = usage_df.assign(
+        year=[time_obj.year for time_obj in time_objs],
+        month=[time_obj.month for time_obj in time_objs],
+        day=[time_obj.day for time_obj in time_objs],
+        hour=[time_obj.hour for time_obj in time_objs],
+        minute=[time_obj.minute for time_obj in time_objs],
+    )
+
+    return usage_df
 
 
 def is_daily_json_file(path: str) -> bool:
