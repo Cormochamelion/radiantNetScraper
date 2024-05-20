@@ -19,6 +19,7 @@ development = ["black==22.12.*"]
 
 [project.scripts]
 radiant-net-scraper = "radiant_net_scraper.scripts:scrape"
+radiant-net-parser = "radiant_net_scraper.scripts:parse_json_files"
 
 [build-system]
 requires = ["setuptools"]
