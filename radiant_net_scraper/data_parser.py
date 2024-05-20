@@ -61,22 +61,33 @@ def parse_file(filepath: str) -> pd.DataFrame:
     return usage_df
 
 
-def sum_daily_df(
+def agg_daily_df(
     daily_df: pd.DataFrame,
-    metric_cols: list[str] = [
+    sum_cols: list[str] = [
         "FromGenToBatt",
         "FromGenToGrid",
         "ToConsumer",
-        "StateOfCharge",
         "FromGenToConsumer",
     ],
+    avg_cols: str = ["StateOfCharge"],
     time_cols: list[str] = ["year", "month", "day"],
 ) -> pd.DataFrame:
     """
     Sum all the usage / production data inside a daily  df.
     """
-    select_cols = [*set(time_cols) | set(metric_cols)]
-    return daily_df[select_cols].groupby(time_cols).aggregate("sum").reset_index()
+    sum_select_cols = [*set(time_cols) | set(sum_cols)]
+    avg_select_cols = [*set(time_cols) | set(avg_cols)]
+
+    sum_df = (
+        daily_df[sum_select_cols].groupby(time_cols).aggregate("sum").add_prefix("sum_")
+    )
+    avg_df = (
+        daily_df[avg_select_cols]
+        .groupby(time_cols)
+        .aggregate("mean")
+        .add_prefix("mean_")
+    )
+    return pd.concat([sum_df, avg_df], axis=1).reset_index()
 
 
 def is_daily_json_file(path: str) -> bool:
@@ -112,15 +123,15 @@ def main(input_dir: str = "./", output_dir: str = "./"):
 
     df_list_clean = [df for df in df_list if not df.empty]
 
-    sum_dfs = [sum_daily_df(daily_df) for daily_df in df_list_clean]
+    sum_dfs = [agg_daily_df(daily_df) for daily_df in df_list_clean]
 
-    daily_sum_outdir = output_dir + "daily_summed"
-    daily_sum_outpaths = [
-        daily_sum_outdir + filename[:-4] + "csv" for filename in filenames
+    daily_agg_outdir = output_dir + "daily_aggregated"
+    daily_agg_outpaths = [
+        daily_agg_outdir + filename[:-4] + "csv" for filename in filenames
     ]
 
-    for df, daily_sum_outpath in zip(sum_dfs, daily_sum_outpaths):
-        df.to_csv(daily_sum_outpath, index=False)
+    for df, daily_agg_outpath in zip(sum_dfs, daily_agg_outpaths):
+        df.to_csv(daily_agg_outpath, index=False)
 
 
 if __name__ == "__main__":
