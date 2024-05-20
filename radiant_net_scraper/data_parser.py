@@ -76,9 +76,13 @@ def get_json_list(dir: str) -> list[str]:
     return [*filter(is_daily_json_file, paths)]
 
 
-def main():
-    infilepaths = get_json_list(".")
-    outfilepaths = map(lambda path: path[:-4] + "csv", infilepaths)
+def main(input_dir: str = "./", output_dir: str = "./"):
+    infilepaths = get_json_list(input_dir)
+    filenames = [os.path.basename(path) for path in infilepaths]
+
+    outfilepaths = [
+        *map(lambda filename: output_dir + filename[:-4] + "csv", filenames)
+    ]
 
     for inpath, outpath in zip(infilepaths, outfilepaths):
         parse_file(inpath).to_csv(outpath)
