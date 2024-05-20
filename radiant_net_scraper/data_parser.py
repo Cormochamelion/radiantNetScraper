@@ -24,8 +24,9 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     """
     # Check if the file contains data, or if it is too old and has been paywalled.
     if json_is_paywalled(usage_json):
-        # We can't extract any data, hence an empty df.
-        return pd.DataFrame()
+        raise ValueError(
+            f"The usage dict is paywalled, can't extract any data from that."
+        )
 
     data_series = usage_json["settings"]["series"]
 
@@ -133,7 +134,14 @@ def main(input_dir: str = "./", output_dir: str = "./"):
         *map(lambda filename: output_dir + filename[:-4] + "csv", filenames)
     ]
 
-    df_list = [parse_file(inpath) for inpath in infilepaths]
+    df_list = []
+
+    for inpath in infilepaths:
+        try:
+            df_list.append(parse_file(inpath))
+        except ValueError as e:
+            # TODO Add logging and change this to be log'd.
+            print(f"Error parsing file at {inpath}: {e}")
 
     for df, outpath in zip(df_list, outfilepaths):
         df.to_csv(outpath, index=False)
