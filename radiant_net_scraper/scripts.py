@@ -66,4 +66,4 @@ def parse_json_files():
 
     args = argparser.parse_args()
 
-    data_parser.parse_json_data(output_dir=args.output_dir, input_dir=args.input_dir)
+    data_parser.parse_json_data(database_dir=args.output_dir, input_dir=args.input_dir)

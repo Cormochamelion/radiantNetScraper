@@ -5,11 +5,17 @@ import os
 import re
 
 from typing import NamedTuple, Iterable
-from pipe import where, izip, Pipe
+from pipe import where, Pipe
 from pipe import map as pmap
+
+from radiant_net_scraper.database import Database
 
 # Disallow in-place modification of dataframes.
 pd.options.mode.copy_on_write = True
+
+# TODO Then add option to build database from json file list, and add to database right
+# after retrieving a json file.
+
 
 class OutputDataFrames(NamedTuple):
     raw: pd.DataFrame
@@ -150,50 +156,28 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     return OutputDataFrames(raw=daily_df, aggregated=agg_df)
 
 
-def save_usage_dataframe_dict(
-    output_dfs: OutputDataFrames, raw_df_outpath: str, agg_df_outpath: str
-):
+def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database):
     """
-    Save the dataframes in a dict for raw and aggregated data to their respective paths.
+    Save the dataframes in a dict for raw and aggregated data into the DB.
     """
-    output_dfs.raw.to_csv(raw_df_outpath, index=False)
-    output_dfs.aggregated.to_csv(agg_df_outpath, index=False)
+    db_handler.insert_raw_data_df(output_dfs.raw)
+    db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
-def parse_json_data(input_dir: str = "./", output_dir: str = "./"):
+def parse_json_data(input_dir: str = "./", database_dir: str = "./"):
     """
-    Parse all the json files in `input_dir` to csv files.
+    Parse all the json files in `input_dir` into a sqlite DB.
     """
     infilepaths = get_json_list(input_dir)
-    filenames = [os.path.basename(path) for path in infilepaths]
 
-    usage_json_data = list(infilepaths | pmap(load_daily_usage_json))
-
-    usage_json_contains_data = list(
-        usage_json_data | pmap(lambda x: not json_is_paywalled(x))
-    )
-
-    filenames_clean = list(filenames | filter_by(usage_json_contains_data))
-
-    raw_df_out_paths = [
-        *map(lambda filename: output_dir + filename[:-4] + "csv", filenames_clean)
-    ]
-
-    daily_agg_outdir = output_dir + "daily_aggregated/"
-
-    if not os.path.exists(daily_agg_outdir):
-        os.mkdir(daily_agg_outdir)
-
-    daily_agg_outpaths = [
-        *map(lambda filename: daily_agg_outdir + filename[:-4] + "csv", filenames_clean)
-    ]
+    db_handler = Database(database_dir)
 
     list(
-        usage_json_data
-        | filter_by(usage_json_contains_data)
+        infilepaths
+        | pmap(load_daily_usage_json)
+        | where(lambda x: not json_is_paywalled(x))
         | pmap(process_daily_usage_dict)
-        | izip(raw_df_out_paths, daily_agg_outpaths)
-        | pmap(lambda x: save_usage_dataframe_dict(x[0], x[1], x[2]))
+        | pmap(lambda x: save_usage_dataframe_dict(x, db_handler))
     )
 
 
