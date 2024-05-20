@@ -4,6 +4,9 @@ import json
 import os
 import re
 
+# Disallow in-place modification of dataframes.
+pd.options.mode.copy_on_write = True
+
 
 def parse_file(filepath: str) -> pd.DataFrame:
     """
@@ -56,6 +59,24 @@ def parse_file(filepath: str) -> pd.DataFrame:
     )
 
     return usage_df
+
+
+def sum_daily_df(
+    daily_df: pd.DataFrame,
+    metric_cols: list[str] = [
+        "FromGenToBatt",
+        "FromGenToGrid",
+        "ToConsumer",
+        "StateOfCharge",
+        "FromGenToConsumer",
+    ],
+    time_cols: list[str] = ["year", "month", "day"],
+) -> pd.DataFrame:
+    """
+    Sum all the usage / production data inside a daily  df.
+    """
+    select_cols = [*set(time_cols) | set(metric_cols)]
+    return daily_df[select_cols].groupby(time_cols).aggregate("sum").reset_index()
 
 
 def is_daily_json_file(path: str) -> bool:
