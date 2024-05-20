@@ -8,23 +8,18 @@ import re
 pd.options.mode.copy_on_write = True
 
 
-def parse_file(filepath: str) -> pd.DataFrame:
+def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     """
-    Parse a given JSON file representing the Fronius data for a given day into a
+    Parse JSON dict representing the Fronius data for a given day into a
     data frame with columns corresponding to the types of data available and each
     row giving the time point of recording.
     """
-    # TODO Validate againts a schema to detect if the format has changed.
-    # TODO Handle IO errors
-    with open(filepath) as infile:
-        json_data = json.load(infile)
-
     # Check if the file contains data, or if it is too old and has been paywalled.
-    if json_data["isPremiumFeature"]:
+    if usage_json["isPremiumFeature"]:
         # We can't extract any data, hence an empty df.
         return pd.DataFrame()
 
-    data_series = json_data["settings"]["series"]
+    data_series = usage_json["settings"]["series"]
 
     series_data = {
         series["id"]: series["data"]
@@ -59,6 +54,20 @@ def parse_file(filepath: str) -> pd.DataFrame:
     )
 
     return usage_df
+
+
+def parse_file(filepath: str) -> pd.DataFrame:
+    """
+    Parse a given JSON file representing the Fronius data for a given day into a
+    data frame with columns corresponding to the types of data available and each
+    row giving the time point of recording.
+    """
+    # TODO Validate againts a schema to detect if the format has changed.
+    # TODO Handle IO errors
+    with open(filepath) as infile:
+        json_data = json.load(infile)
+
+    return parse_usage_json(json_data)
 
 
 def agg_daily_df(
