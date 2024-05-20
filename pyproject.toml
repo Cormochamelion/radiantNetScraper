@@ -7,6 +7,7 @@ dependencies = [
     "requests==2.31.*",
     "numpy==1.26.*",
     "pandas==2.2.*",
+    "pipe==2.2.*",
 ]
 name = "radiant-net-scraper"
 version = "0.1.0"
