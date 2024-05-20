@@ -65,16 +65,24 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     return usage_df
 
 
+def load_daily_usage_json(filepath: str) -> dict:
+    """
+    Load a json file containing daily usage data into a dict. Later validation should
+    go in here.
+    """
+    # TODO Validate againts a schema to detect if the format has changed.
+    # TODO Handle IO errors
+    with open(filepath) as infile:
+        return json.load(infile)
+
+
 def parse_file(filepath: str) -> pd.DataFrame:
     """
     Parse a given JSON file representing the Fronius data for a given day into a
     data frame with columns corresponding to the types of data available and each
     row giving the time point of recording.
     """
-    # TODO Validate againts a schema to detect if the format has changed.
-    # TODO Handle IO errors
-    with open(filepath) as infile:
-        json_data = json.load(infile)
+    json_data = load_daily_usage_json(filepath)
 
     return parse_usage_json(json_data)
 
