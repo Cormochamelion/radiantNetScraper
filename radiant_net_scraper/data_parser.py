@@ -4,8 +4,24 @@ import json
 import os
 import re
 
+from typing import NamedTuple, Iterable
+from pipe import where, izip, Pipe
+from pipe import map as pmap
+
 # Disallow in-place modification of dataframes.
 pd.options.mode.copy_on_write = True
+
+class OutputDataFrames(NamedTuple):
+    raw: pd.DataFrame
+    aggregated: pd.DataFrame
+
+
+@Pipe
+def filter_by(x: Iterable, filter: Iterable[bool]) -> Iterable:
+    """
+    Filter `x` by the values of `filter`.
+    """
+    return zip(x, filter) | where(lambda x: x[1]) | pmap(lambda x: x[0])
 
 
 def json_is_paywalled(usage_json: dict) -> bool:
@@ -76,17 +92,6 @@ def load_daily_usage_json(filepath: str) -> dict:
         return json.load(infile)
 
 
-def parse_file(filepath: str) -> pd.DataFrame:
-    """
-    Parse a given JSON file representing the Fronius data for a given day into a
-    data frame with columns corresponding to the types of data available and each
-    row giving the time point of recording.
-    """
-    json_data = load_daily_usage_json(filepath)
-
-    return parse_usage_json(json_data)
-
-
 def agg_daily_df(
     daily_df: pd.DataFrame,
     sum_cols: list[str] = [
@@ -134,29 +139,42 @@ def get_json_list(dir: str) -> list[str]:
     return [*filter(is_daily_json_file, paths)]
 
 
+def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
+    """
+    Process a json dict of daily usage data into a dataframe, and return it alongside
+    a dataframe of the data aggregated over the whole day.
+    """
+    daily_df = parse_usage_json(json_dict)
+    agg_df = agg_daily_df(daily_df)
+
+    return OutputDataFrames(raw=daily_df, aggregated=agg_df)
+
+
+def save_usage_dataframe_dict(
+    output_dfs: OutputDataFrames, raw_df_outpath: str, agg_df_outpath: str
+):
+    """
+    Save the dataframes in a dict for raw and aggregated data to their respective paths.
+    """
+    output_dfs.raw.to_csv(raw_df_outpath, index=False)
+    output_dfs.aggregated.to_csv(agg_df_outpath, index=False)
+
+
 def main(input_dir: str = "./", output_dir: str = "./"):
     infilepaths = get_json_list(input_dir)
     filenames = [os.path.basename(path) for path in infilepaths]
 
-    outfilepaths = [
-        *map(lambda filename: output_dir + filename[:-4] + "csv", filenames)
+    usage_json_data = list(infilepaths | pmap(load_daily_usage_json))
+
+    usage_json_contains_data = list(
+        usage_json_data | pmap(lambda x: not json_is_paywalled(x))
+    )
+
+    filenames_clean = list(filenames | filter_by(usage_json_contains_data))
+
+    raw_df_out_paths = [
+        *map(lambda filename: output_dir + filename[:-4] + "csv", filenames_clean)
     ]
-
-    df_list = []
-
-    for inpath in infilepaths:
-        try:
-            df_list.append(parse_file(inpath))
-        except ValueError as e:
-            # TODO Add logging and change this to be log'd.
-            print(f"Error parsing file at {inpath}: {e}")
-
-    for df, outpath in zip(df_list, outfilepaths):
-        df.to_csv(outpath, index=False)
-
-    df_list_clean = [df for df in df_list if not df.empty]
-
-    sum_dfs = [agg_daily_df(daily_df) for daily_df in df_list_clean]
 
     daily_agg_outdir = output_dir + "daily_aggregated/"
 
@@ -164,11 +182,16 @@ def main(input_dir: str = "./", output_dir: str = "./"):
         os.mkdir(daily_agg_outdir)
 
     daily_agg_outpaths = [
-        daily_agg_outdir + filename[:-4] + "csv" for filename in filenames
+        *map(lambda filename: daily_agg_outdir + filename[:-4] + "csv", filenames_clean)
     ]
 
-    for df, daily_agg_outpath in zip(sum_dfs, daily_agg_outpaths):
-        df.to_csv(daily_agg_outpath, index=False)
+    list(
+        usage_json_data
+        | filter_by(usage_json_contains_data)
+        | pmap(process_daily_usage_dict)
+        | izip(raw_df_out_paths, daily_agg_outpaths)
+        | pmap(lambda x: save_usage_dataframe_dict(x[0], x[1], x[2]))
+    )
 
 
 if __name__ == "__main__":
