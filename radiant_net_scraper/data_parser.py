@@ -134,7 +134,11 @@ def main(input_dir: str = "./", output_dir: str = "./"):
 
     sum_dfs = [agg_daily_df(daily_df) for daily_df in df_list_clean]
 
-    daily_agg_outdir = output_dir + "daily_aggregated"
+    daily_agg_outdir = output_dir + "daily_aggregated/"
+
+    if not os.path.exists(daily_agg_outdir):
+        os.mkdir(daily_agg_outdir)
+
     daily_agg_outpaths = [
         daily_agg_outdir + filename[:-4] + "csv" for filename in filenames
     ]
