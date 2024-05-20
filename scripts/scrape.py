@@ -26,6 +26,7 @@ def main():
         "--days-ago",
         "-n",
         default=1,
+        type=int,
         help=(
             "The data of how many days ago should be scraped (default: %(default)s). "
             "Note that for non-premium users only the previous two days are available, "
