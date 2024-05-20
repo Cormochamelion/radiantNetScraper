@@ -160,7 +160,10 @@ def save_usage_dataframe_dict(
     output_dfs.aggregated.to_csv(agg_df_outpath, index=False)
 
 
-def main(input_dir: str = "./", output_dir: str = "./"):
+def parse_json_data(input_dir: str = "./", output_dir: str = "./"):
+    """
+    Parse all the json files in `input_dir` to csv files.
+    """
     infilepaths = get_json_list(input_dir)
     filenames = [os.path.basename(path) for path in infilepaths]
 
@@ -195,4 +198,4 @@ def main(input_dir: str = "./", output_dir: str = "./"):
 
 
 if __name__ == "__main__":
-    main()
+    parse_json_data()
