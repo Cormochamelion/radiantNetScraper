@@ -21,6 +21,7 @@ development = ["black==22.12.*", "pytest-cases<=3.8.5", "pytest<=8.3"]
 [project.scripts]
 radiant-net-paths = "radiant_net_scraper.config:print_app_path_json"
 radiant-net-scraper = "radiant_net_scraper.scripts:scrape"
+radiant-net-parser = "radiant_net_scraper.scripts:parse_json_files"
 
 [build-system]
 requires = ["setuptools"]
