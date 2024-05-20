@@ -8,6 +8,14 @@ import re
 pd.options.mode.copy_on_write = True
 
 
+def json_is_paywalled(usage_json: dict) -> bool:
+    """
+    Check if a downloaded JSON files is paywalled. If not, it should contain the data
+    we are after.
+    """
+    return usage_json["isPremiumFeature"]
+
+
 def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     """
     Parse JSON dict representing the Fronius data for a given day into a
@@ -15,7 +23,7 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     row giving the time point of recording.
     """
     # Check if the file contains data, or if it is too old and has been paywalled.
-    if usage_json["isPremiumFeature"]:
+    if json_is_paywalled(usage_json):
         # We can't extract any data, hence an empty df.
         return pd.DataFrame()
 
