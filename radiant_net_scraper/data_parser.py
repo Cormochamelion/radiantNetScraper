@@ -105,8 +105,22 @@ def main(input_dir: str = "./", output_dir: str = "./"):
         *map(lambda filename: output_dir + filename[:-4] + "csv", filenames)
     ]
 
-    for inpath, outpath in zip(infilepaths, outfilepaths):
-        parse_file(inpath).to_csv(outpath)
+    df_list = [parse_file(inpath) for inpath in infilepaths]
+
+    for df, outpath in zip(df_list, outfilepaths):
+        df.to_csv(outpath, index=False)
+
+    df_list_clean = [df for df in df_list if not df.empty]
+
+    sum_dfs = [sum_daily_df(daily_df) for daily_df in df_list_clean]
+
+    daily_sum_outdir = output_dir + "daily_summed"
+    daily_sum_outpaths = [
+        daily_sum_outdir + filename[:-4] + "csv" for filename in filenames
+    ]
+
+    for df, daily_sum_outpath in zip(sum_dfs, daily_sum_outpaths):
+        df.to_csv(daily_sum_outpath, index=False)
 
 
 if __name__ == "__main__":
