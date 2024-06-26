@@ -59,8 +59,13 @@ class FroniusSession:
             "session_state": None,
         }
 
-        for key in login_params.keys():
-            login_params[key] = login_soup.find("input", {"name": key}).get("value")
+        try:
+            for key in login_params.keys():
+                login_params[key] = login_soup.find("input", {"name": key}).get("value")
+
+        except AttributeError:
+            # If those keys are not present, something went wrong with the login.
+            raise Exception(f"Error during login attempt. Are the credentials correct?")
 
         # We only care about getting the cookies.
         _ = self.session.post(url=callback_url, data=login_params)
