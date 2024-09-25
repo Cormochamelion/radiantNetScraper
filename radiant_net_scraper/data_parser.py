@@ -1,9 +1,11 @@
 import datetime as dt
+import numpy as np
 import pandas as pd
 import json
 import os
 import re
 
+from functools import reduce
 from typing import NamedTuple, Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
@@ -38,6 +40,25 @@ def json_is_paywalled(usage_json: dict) -> bool:
     return usage_json["isPremiumFeature"]
 
 
+def series_data_to_df(series_data: list[list[int,]]) -> pd.DataFrame:
+    """
+    Convert an individual data series containing timestamp & value to a dataframe.
+
+    The series data comes in a list of lists the latter of which is always len 2,
+    what here is called a cell. Each cell contains the timestamp in Unix time in
+    its first element, and the series value in the second. This function constructs
+    a data frame constiting of a time and value column from that.
+    """
+    time_arr = np.empty((len(series_data)), np.int64)
+    data_arr = np.empty((len(series_data)), type(series_data[0][1]))
+
+    for i, cell in enumerate(series_data):
+        time_arr[i] = cell[0]
+        data_arr[i] = cell[1]
+
+    return pd.DataFrame({"time": time_arr, "data": data_arr})
+
+
 def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     """
     Parse JSON dict representing the Fronius data for a given day into a
@@ -56,25 +77,19 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
         series["id"]: series["data"]
         for series in data_series
         # BattOperatingState has len 1, so it can't be part of the df.
-        if series["id"] != "BattOperatingState"
+        if series["id"] not in ["BattOperatingState"]
     }
 
-    # The series data comes in a list of lists the latter of which is always len 2,
-    # what here is called a cell. Each cell contains the timestamp in Unix time in
-    # its first element, and the series value in the second.
-    first_series = next(iter(series_data.values()))
-    time_col = [cell[0] for cell in first_series]
-    data_cols = {
-        series_id: [cell[1] for cell in data] for series_id, data in series_data.items()
-    }
+    series_dfs = []
+    for series_id, series_values in series_data.items():
+        series_df = series_data_to_df(series_values)
+        series_dfs.append(series_df.rename(columns={"data": series_id}))
 
-    data_cols["time"] = time_col
+    usage_df = reduce(lambda x, y: pd.merge(x, y, how="outer", on="time"), series_dfs)
 
-    # Create accessible datetime objects by converting milisecond count from time col
-    # to POSIX second count.
-    time_objs = [dt.datetime.fromtimestamp(timestamp / 1e3) for timestamp in time_col]
-
-    usage_df = pd.DataFrame(data_cols)
+    time_objs = [
+        dt.datetime.fromtimestamp(timestamp / 1e3) for timestamp in usage_df.time
+    ]
 
     usage_df = usage_df.assign(
         year=[time_obj.year for time_obj in time_objs],
@@ -116,9 +131,7 @@ def agg_daily_df(
     sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
     avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
 
-    sum_df = (
-        daily_df[sum_select_cols].groupby(time_cols).aggregate("sum").add_prefix("sum_")
-    )
+    sum_df = daily_df[sum_select_cols].groupby(time_cols).agg("sum").add_prefix("sum_")
     avg_df = (
         daily_df[avg_select_cols]
         .groupby(time_cols)
