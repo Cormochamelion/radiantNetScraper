@@ -90,7 +90,14 @@ class Database:
         """
         Insert a dataframe into the database.
         """
-        df.to_sql(table_name, self.db_conn, if_exists="append", index=False)
+        try:
+            df.to_sql(table_name, self.db_conn, if_exists="append", index=False)
+        except sqlite3.IntegrityError as e:
+            if "UNIQUE constraint failed" in str(e):
+                # TODO Inform the user that insertion was skipped.
+                pass
+            else:
+                raise e
 
     def insert_raw_data_df(self, raw_data_df: pd.DataFrame) -> None:
         """
