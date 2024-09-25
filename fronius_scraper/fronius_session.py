@@ -26,10 +26,20 @@ class FroniusSession:
         """Get all necessary data and cookies to perform all operations."""
 
         # Just to get the __RequestVerificationToken
-        # TODO Add handling of case that solarweb is not reachable.
         _ = self.session.get(url=self.landing_url)
 
-        login_page_resp = self.session.get(self.login_url, allow_redirects=True)
+        try:
+            login_page_resp = self.session.get(self.login_url, allow_redirects=True)
+            login_page_resp.raise_for_status()
+
+        except rq.ConnectionError as e:
+            Exception(
+                f"Error getting Solarweb login page at {self.login_url}: {e}\n"
+                f"Is the network ok, is {self.landing_url} reachable?"
+            )
+
+        except rq.HTTPError as e:
+            Exception(f"Error getting Solarweb login page at {self.login_url}: {e}")
 
         for line in login_page_resp.iter_lines():
             match = re.search(self.key_pattern, line.decode())
