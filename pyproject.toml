@@ -18,8 +18,8 @@ development = ["black==22.12.*"]
 fronius-scraper = "scripts.scrape:main"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
+[tool.setuptools]
 packages = ["fronius_scraper"]
