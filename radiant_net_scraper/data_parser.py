@@ -112,8 +112,9 @@ def agg_daily_df(
     """
     Sum all the usage / production data inside a daily  df.
     """
-    sum_select_cols = [*set(time_cols) | set(sum_cols)]
-    avg_select_cols = [*set(time_cols) | set(avg_cols)]
+    present_cols = set(daily_df.columns.values)
+    sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
+    avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
 
     sum_df = (
         daily_df[sum_select_cols].groupby(time_cols).aggregate("sum").add_prefix("sum_")
