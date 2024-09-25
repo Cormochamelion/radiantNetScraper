@@ -15,7 +15,7 @@ authors = [{ name = "Cormochamelion", email = "cormocodran1.5@gmail.com" }]
 development = ["black==22.12.*"]
 
 [project.scripts]
-fronius-scraper = "scripts.scrape:main"
+fronius-scraper = "fronius_scraper.scripts:scrape"
 
 [build-system]
 requires = ["setuptools"]

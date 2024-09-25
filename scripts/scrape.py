@@ -5,39 +5,6 @@ get the data for the standard dayly plot of production, use, and battery level f
 previous day, and dump them to a timestamped JSON file.
 """
 
-import argparse
-from fronius_scraper.scrape import run_scraper
+from fronius_scraper.scripts import scrape
 
-
-def main():
-    argparser = argparse.ArgumentParser(
-        "Fronius Solarweb Scraper",
-        description=(
-            "Scrape daily JSON generation & usage stats from Fronius Solarweb."
-        ),
-    )
-    argparser.add_argument(
-        "--output-dir",
-        "-o",
-        default="./",
-        help="Where to put output files (default: %(default)s)",
-    )
-    argparser.add_argument(
-        "--days-ago",
-        "-n",
-        default=1,
-        type=int,
-        help=(
-            "The data of how many days ago should be scraped (default: %(default)s). "
-            "Note that for non-premium users only the previous two days are available, "
-            "and that the current day contains incomplete data."
-        ),
-    )
-
-    args = argparser.parse_args()
-
-    run_scraper(**vars(args))
-
-
-if __name__ == "__main__":
-    main()
+scrape()
