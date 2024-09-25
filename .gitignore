@@ -1,3 +1,6 @@
 .venv/
 **/__pycache__
 .env
+
+# pip install data
+*.egg-info
