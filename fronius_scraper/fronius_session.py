@@ -41,10 +41,16 @@ class FroniusSession:
         except rq.HTTPError as e:
             Exception(f"Error getting Solarweb login page at {self.login_url}: {e}")
 
-        for line in login_page_resp.iter_lines():
-            match = re.search(self.key_pattern, line.decode())
-            if match:
-                self.session_key = match.group()
+        session_key_match = re.search(self.key_pattern, login_page_resp.text)
+
+        if not session_key_match:
+            Exception(
+                f"Couldn't extract session key from login response. Perhaps the login"
+                f"procedure has been changed by fronius?"
+            )
+
+        else:
+            self.session_key = session_key_match.group()
 
         login_form_resp = self.session.post(
             url=self.login_form_post_url,
