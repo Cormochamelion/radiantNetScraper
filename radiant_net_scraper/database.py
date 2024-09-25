@@ -48,11 +48,11 @@ class Database:
         table_name = "raw_data"
 
         column_dict = {
-            "FromGenToBatt": "REAL NOT NULL",
-            "FromGenToGrid": "REAL NOT NULL",
-            "ToConsumer": "REAL NOT NULL",
-            "FromGenToConsumer": "REAL NOT NULL",
-            "StateOfCharge": "REAL NOT NULL",
+            "FromGenToBatt": "REAL",
+            "FromGenToGrid": "REAL",
+            "ToConsumer": "REAL",
+            "FromGenToConsumer": "REAL",
+            "StateOfCharge": "REAL",
             "time": "INTEGER NOT NULL UNIQUE",
             "year": "INTEGER NOT NULL",
             "month": "INTEGER NOT NULL",
@@ -72,11 +72,11 @@ class Database:
         table_name = "daily_aggregated"
 
         column_dict = {
-            "sum_FromGenToBatt": "REAL NOT NULL",
-            "sum_FromGenToGrid": "REAL NOT NULL",
-            "sum_ToConsumer": "REAL NOT NULL",
-            "sum_FromGenToConsumer": "REAL NOT NULL",
-            "mean_StateOfCharge": "REAL NOT NULL",
+            "sum_FromGenToBatt": "REAL",
+            "sum_FromGenToGrid": "REAL",
+            "sum_ToConsumer": "REAL",
+            "sum_FromGenToConsumer": "REAL",
+            "mean_StateOfCharge": "REAL",
             "year": "INTEGER NOT NULL",
             "month": "INTEGER NOT NULL",
             "day": "INTEGER NOT NULL",
