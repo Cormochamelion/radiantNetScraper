@@ -178,21 +178,29 @@ def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database
     db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
-def parse_json_data(input_dir: str = "./", database_dir: str = "./"):
+def parse_json_data_from_file_list(
+    infiles: list[str], database_dir: str = "./"
+) -> None:
     """
-    Parse all the json files in `input_dir` into a sqlite DB.
+    Parse a list of JSON files into the SQLiteDB at `database_dir`.
     """
-    infilepaths = get_json_list(input_dir)
-
     db_handler = Database(database_dir)
 
     list(
-        infilepaths
+        infiles
         | pmap(load_daily_usage_json)
         | where(lambda x: not json_is_paywalled(x))
         | pmap(process_daily_usage_dict)
         | pmap(lambda x: save_usage_dataframe_dict(x, db_handler))
     )
+
+
+def parse_json_data(input_dir: str = "./", database_dir: str = "./"):
+    """
+    Parse all the json files in `input_dir` into a sqlite DB.
+    """
+    infilepaths = get_json_list(input_dir)
+    parse_json_data_from_file_list(infilepaths, database_dir=database_dir)
 
 
 if __name__ == "__main__":
