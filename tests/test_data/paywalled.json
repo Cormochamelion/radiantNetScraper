@@ -1,0 +1,58 @@
+{
+  "isPremiumFeature": true,
+  "navOptions": {
+    "canDrillDown": false,
+    "canMoveBackward": true,
+    "canMoveForward": true
+  },
+  "settings": {
+    "series": [],
+    "sumValue": "281,23 kWh",
+    "yAxis": [
+      {
+        "max": 1000.0,
+        "min": 0.0,
+        "title": {
+          "text": "",
+          "textAlign": "left",
+          "rotation": 0,
+          "y": -25,
+          "x": 10,
+          "align": "high",
+          "style": {
+            "fontSize": "12px",
+            "fontWeight": 0
+          }
+        },
+        "id": "W",
+        "gridLineWidth": 1,
+        "gridLineColor": "#ECEDED",
+        "labels": {
+          "enabled": true,
+          "y": -4,
+          "x": 0,
+          "align": "left"
+        },
+        "tickWidth": 1,
+        "offset": 32,
+        "tickLength": 32,
+        "tickPosition": "inside",
+        "tickColor": "#ECEDED",
+        "tickAmount": 6
+      }
+    ],
+    "xAxis": {
+      "type": "datetime",
+      "max": 1311198900000.0,
+      "min": 1311112800000.0,
+      "crosshair": true,
+      "tickWidth": 1,
+      "tickColor": "#ECEDED",
+      "lineColor": "#ECEDED"
+    }
+  },
+  "specialView": "noPremium",
+  "title": "20.07.2011",
+  "showBattInfo": false,
+  "sumValue": "281,23 kWh"
+}
