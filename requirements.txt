@@ -3,8 +3,14 @@ certifi==2024.8.30
 charset-normalizer==3.3.2
 idna==3.10
 lxml==4.9.4
+numpy==1.26.4
+pandas==2.2.3
+python-dateutil==2.9.0.post0
 python-dotenv==0.21.1
--e git+https://github.com/Cormochamelion/radiantNetScraper@948364dc1337fde960ab2be130b9ba11e095b4d3#egg=radiant_net_scraper&subdirectory=../../radiantNetScraper
+pytz==2024.2
+-e git+https://github.com/Cormochamelion/radiantNetScraper@4dd76e2cbdd593141cf25764c08ab621ad0bcbeb#egg=radiant_net_scraper&subdirectory=../../radiantNetScraper
 requests==2.31.0
+six==1.16.0
 soupsieve==2.6
+tzdata==2024.2
 urllib3==2.2.3
