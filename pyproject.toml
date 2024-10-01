@@ -6,20 +6,20 @@ dependencies = [
     "python-dotenv==0.21.*",
     "requests==2.31.*",
 ]
-name = "fronius-scraper"
+name = "radiant-net-scraper"
 version = "0.1.0"
-description = "Scraping & saving usage data from Fronius Solarweb."
+description = "Scraping & saving usage data from radiantNet or similar websites."
 authors = [{ name = "Cormochamelion", email = "cormocodran1.5@gmail.com" }]
 
 [project.optional-dependencies]
 development = ["black==22.12.*"]
 
 [project.scripts]
-fronius-scraper = "fronius_scraper.scripts:scrape"
+radiant-net-scraper = "radiant_net_scraper.scripts:scrape"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["fronius_scraper"]
+packages = ["radiant_net_scraper"]

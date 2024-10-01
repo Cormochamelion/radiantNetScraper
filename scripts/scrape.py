@@ -5,6 +5,6 @@ get the data for the standard dayly plot of production, use, and battery level f
 previous day, and dump them to a timestamped JSON file.
 """
 
-from fronius_scraper.scripts import scrape
+from radiant_net_scraper.scripts import scrape
 
 scrape()

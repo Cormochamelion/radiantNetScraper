@@ -3,7 +3,7 @@ import json
 import datetime as dt
 from dotenv import load_dotenv
 
-from fronius_scraper.fronius_session import FroniusSession
+from radiant_net_scraper.fronius_session import FroniusSession
 
 
 def scrape_daily_data(secrets: dict, date: dt.date) -> dict:

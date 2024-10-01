@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-from fronius_scraper.scrape import run_scraper
+from radiant_net_scraper.scrape import run_scraper
 
 
 def scrape():
@@ -11,7 +11,7 @@ def scrape():
     """
 
     argparser = argparse.ArgumentParser(
-        "Fronius Solarweb Scraper",
+        "RadiantNet Scraper",
         description=(
             "Scrape daily JSON generation & usage stats from Fronius Solarweb."
         ),
