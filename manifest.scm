@@ -7,6 +7,8 @@
 (specifications->manifest
   (list "python-beautifulsoup4"
         "python-dotenv"
+        "python-numpy"
+        "python-pandas"
         "python-pip"
         "python-requests"
         "python"))
