@@ -130,6 +130,8 @@ end of the session, e.g. for applicative benchmarking purposes.")
   (map specification->package
     (list "python-beautifulsoup4"
           "python-dotenv"
+          "python-numpy"
+          "python-pandas"
           "python-pip"
           "python-platformdirs"
           "python-pytest"
