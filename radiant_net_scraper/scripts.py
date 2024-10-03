@@ -56,6 +56,12 @@ def parse_json_files():
     )
 
     argparser.add_argument(
+        "--input-files",
+        help="List of input file paths. If provided, `--input-dir` is ignored.",
+        nargs="+",
+    )
+
+    argparser.add_argument(
         "--output-dir",
         "-o",
         default="./",
@@ -66,4 +72,12 @@ def parse_json_files():
 
     args = argparser.parse_args()
 
-    data_parser.parse_json_data(database_dir=args.output_dir, input_dir=args.input_dir)
+    if args.input_files:
+        data_parser.parse_json_data_from_file_list(
+            database_dir=args.output_dir, infiles=args.input_files
+        )
+
+    else:
+        data_parser.parse_json_data(
+            database_dir=args.output_dir, input_dir=args.input_dir
+        )
