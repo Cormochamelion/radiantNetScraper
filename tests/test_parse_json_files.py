@@ -26,3 +26,10 @@ class TestParseJsonDataFromFileList:
 
         # Ensure the db has the right number of tables
         assert len(table_info) == 2
+
+        # Ensure each table contains data.
+        for table in table_info:
+            table_name = table[0]
+            table_n_entry_query = f"SELECT COUNT(1) FROM {table_name}"
+            table_n_entry = db_cursor.execute(table_n_entry_query).fetchall()[0][0]
+            assert table_n_entry > 0
