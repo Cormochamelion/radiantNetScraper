@@ -1,4 +1,3 @@
-import os
 import json
 import datetime as dt
 
@@ -16,24 +15,6 @@ def scrape_daily_data(secrets: dict, date: dt.date) -> dict:
     )
 
     return json.dumps(fsession.get_chart(date=date))
-
-
-def get_secrets_from_env() -> dict:
-    """
-    Obtain a dict of required secrets from the environment.
-    """
-    secrets = {
-        "username": os.getenv("username"),
-        "password": os.getenv("password"),
-        "fronius-id": os.getenv("fronius-id"),
-    }
-
-    if None in secrets.values():
-        none_secrets = ", ".join([x[0] for x in secrets.items() if x[1] is None])
-
-        raise Exception(f"Fields {none_secrets} were not filled. Check your .env file.")
-
-    return secrets
 
 
 def get_fronius_secrets() -> dict:
