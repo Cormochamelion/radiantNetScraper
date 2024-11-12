@@ -16,6 +16,7 @@ authors = [{ name = "Cormochamelion", email = "cormocodran1.5@gmail.com" }]
 development = ["black==22.12.*", "pytest-cases<=3.8.5", "pytest<=8.3"]
 
 [project.scripts]
+radiant-net-config-files = "radiant_net_scraper.config:get_config_paths"
 radiant-net-scraper = "radiant_net_scraper.scripts:scrape"
 
 [build-system]
