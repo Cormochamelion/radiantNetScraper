@@ -8,5 +8,6 @@
   (list "python-beautifulsoup4"
         "python-dotenv"
         "python-pip"
+        "python-platformdirs"
         "python-requests"
         "python"))
