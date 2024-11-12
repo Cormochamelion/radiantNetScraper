@@ -1,0 +1,21 @@
+{
+    "env_variables": {
+        "username": [
+            "secrets",
+            "username"
+        ],
+        "password": [
+            "secrets",
+            "password"
+        ],
+        "fronius_id": [
+            "secrets",
+            "fronius-id"
+        ]
+    },
+    "config_hierarchy": [
+        "default",
+        "site",
+        "user"
+    ]
+}
