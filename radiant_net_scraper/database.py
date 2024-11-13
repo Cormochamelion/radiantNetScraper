@@ -8,12 +8,8 @@ class Database:
     Class for managing the SQLite DB for storing generation & usage data.
     """
 
-    def __init__(
-        self, db_dir: str = "./", db_filename: str = "generation_and_usage.sqlite3"
-    ) -> None:
+    def __init__(self, db_path: str = "./generation_and_usage.sqlite3") -> None:
         # TODO Check if already exsting, if so inform user.
-        db_path = db_dir + db_filename
-
         self.db_conn = sqlite3.connect(db_path)
         self.db_conn.row_factory = sqlite3.Row
 
