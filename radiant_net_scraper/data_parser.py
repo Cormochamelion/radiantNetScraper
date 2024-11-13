@@ -178,13 +178,11 @@ def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database
     db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
-def parse_json_data_from_file_list(
-    infiles: list[str], database_dir: str = "./"
-) -> None:
+def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLiteDB at `database_dir`.
     """
-    db_handler = Database(database_dir)
+    db_handler = Database(**kwargs)
 
     list(
         infiles
@@ -195,9 +193,9 @@ def parse_json_data_from_file_list(
     )
 
 
-def parse_json_data(input_dir: str = "./", database_dir: str = "./"):
+def parse_json_data(input_dir: str = "./", **kwargs):
     """
     Parse all the json files in `input_dir` into a sqlite DB.
     """
     infilepaths = get_json_list(input_dir)
-    parse_json_data_from_file_list(infilepaths, database_dir=database_dir)
+    parse_json_data_from_file_list(infilepaths, **kwargs)

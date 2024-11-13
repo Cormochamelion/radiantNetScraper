@@ -13,7 +13,7 @@ class TestParseJsonDataFromFileList:
         """
         path_str = str(tmp_path)
         data_parser.parse_json_data_from_file_list(
-            json_test_files, database_dir=path_str + "/"
+            json_test_files, db_path=path_str + "/generation_and_usage.sqlite3"
         )
 
         expected_db_path = f"{path_str}/generation_and_usage.sqlite3"
