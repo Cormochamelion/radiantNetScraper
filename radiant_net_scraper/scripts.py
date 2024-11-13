@@ -64,9 +64,9 @@ def parse_json_files():
     )
 
     argparser.add_argument(
-        "--output-dir",
+        "--output-db",
         "-o",
-        default="./",
+        default="./generation_and_usage.sqlite3",
         type=str,
         # TODO Add info on what will be outputted.
         help="Dir to which output will be saved (default: %(default)s).",
@@ -76,10 +76,8 @@ def parse_json_files():
 
     if args.input_files:
         data_parser.parse_json_data_from_file_list(
-            database_dir=args.output_dir, infiles=args.input_files
+            db_path=args.output_db, infiles=args.input_files
         )
 
     else:
-        data_parser.parse_json_data(
-            database_dir=args.output_dir, input_dir=args.input_dir
-        )
+        data_parser.parse_json_data(db_path=args.output_db, input_dir=args.input_dir)
