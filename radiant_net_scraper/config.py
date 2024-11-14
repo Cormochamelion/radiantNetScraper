@@ -29,6 +29,22 @@ def get_config_paths(config_file_name: str = "config.json") -> dict[str, str]:
     }
 
 
+def get_data_paths(
+    data_file_name: str = "generation_and_usage.sqlite3",
+) -> dict[str, str]:
+    """
+    Get a dict of possible paths to where the app saves its data.
+    """
+    scraper_meta = metadata("radiant_net_scraper")
+
+    return {
+        "site": site_config_dir(scraper_meta["Name"], scraper_meta["Author"])
+        + f"/{data_file_name}",
+        "user": user_config_dir(scraper_meta["Name"], scraper_meta["Author"])
+        + f"/{data_file_name}",
+    }
+
+
 def _update_config_with_files(
     config: cfp.ConfigParser, config_files: dict[str, str], config_hierarchy: list[str]
 ) -> None:
