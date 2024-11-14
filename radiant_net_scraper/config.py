@@ -248,3 +248,15 @@ class Config:
             cls._config_obj = _init_config()
 
         return cls._config_obj
+
+
+def get_chosen_data_path() -> str:
+    """
+    Get the path to the database file as determined by the config.
+    """
+    config = Config.get_config()
+
+    return choose_db_path(
+        location_type=config["database"]["location_type"],
+        path=config["database"]["path"],
+    )
