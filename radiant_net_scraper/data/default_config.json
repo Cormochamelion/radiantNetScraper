@@ -1,4 +1,8 @@
 {
+    "database": {
+        "location_type": "user",
+        "path": "./generation_and_usage.sqlite3"
+    },
     "secrets": {
         "username": null,
         "password": null,
