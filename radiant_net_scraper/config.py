@@ -104,6 +104,29 @@ def print_app_path_json() -> None:
     print(dumps(app_path_dict, indent=2))
 
 
+def choose_db_path(
+    location_type: str,
+    path: str,
+    default_filename: str = "generation_and_usage.sqlite3",
+) -> str:
+    """
+    Based on the location type, choose where the database file should be put / looked
+    for. `location_type` should be either "user", "site", or "path". In the
+    first two cases, the path will use the corresponding platform dirs
+    (`user_data_path`, `site_data_path`), see `radiant-net-paths` to what that resolves
+    to. In the latter case, the "path" config value will be used.
+    """
+    data_paths = get_data_paths(default_filename)
+
+    if location_type in data_paths:
+        db_path = data_paths[location_type]
+
+    else:
+        db_path = path
+
+    return db_path
+
+
 def _update_config_with_files(
     config: cfp.ConfigParser, config_files: dict[str, str], config_hierarchy: list[str]
 ) -> None:
