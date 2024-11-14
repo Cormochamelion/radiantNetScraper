@@ -93,8 +93,13 @@ def print_app_path_json() -> None:
     # what does what.
     config_paths = get_config_paths()
     raw_data_paths = get_data_paths(data_file_name="raw_data")
+    data_paths = get_data_paths(data_file_name="generation_and_usage.sqlite3")
 
-    app_path_dict = {"config": config_paths, "raw_data": raw_data_paths}
+    app_path_dict = {
+        "config": config_paths,
+        "raw_data": raw_data_paths,
+        "data": data_paths,
+    }
 
     print(dumps(app_path_dict, indent=2))
 
