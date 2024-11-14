@@ -53,8 +53,10 @@ def parse_json_files():
         "-i",
         default="./",
         type=str,
-        # TODO Add info on filename pattern.
-        help="Dir in which to search for JSON files to parse (default: %(default)s).",
+        help=(
+            "Dir in which to search for JSON files to parse (default: %(default)s). "
+            "Files are assumed to be named in the format `YYYYMMDD.json`."
+        ),
     )
 
     argparser.add_argument(
@@ -68,8 +70,7 @@ def parse_json_files():
         "-o",
         default="./generation_and_usage.sqlite3",
         type=str,
-        # TODO Add info on what will be outputted.
-        help="Dir to which output will be saved (default: %(default)s).",
+        help="Dir to which the database will be saved (default: %(default)s).",
     )
 
     args = argparser.parse_args()
