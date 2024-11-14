@@ -10,7 +10,7 @@ from typing import NamedTuple, Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
 
-from radiant_net_scraper.config import Config, choose_db_path
+from radiant_net_scraper.config import get_chosen_data_path
 from radiant_net_scraper.database import Database
 
 # Disallow in-place modification of dataframes.
@@ -183,12 +183,7 @@ def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     Parse a list of JSON files into the SQLite DB.
     """
     if "db_path" not in kwargs:
-        config = Config.get_config()
-        kwargs["db_path"] = choose_db_path(
-            location_type=config["database"]["location_type"],
-            path=config["database"]["path"],
-        )
-
+        kwargs["db_path"] = get_chosen_data_path()
     db_handler = Database(**kwargs)
 
     list(
