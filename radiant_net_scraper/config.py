@@ -6,7 +6,7 @@ construct a config object.
 import configparser as cfp
 from importlib.metadata import metadata
 from importlib.resources import files
-from json import load
+from json import load, dumps
 from os import environ
 from os.path import exists
 from platformdirs import site_config_dir, user_config_dir
@@ -43,6 +43,18 @@ def get_data_paths(
         "user": user_config_dir(scraper_meta["Name"], scraper_meta["Author"])
         + f"/{data_file_name}",
     }
+
+
+def print_app_path_json() -> None:
+    """
+    Print JSON representation of the paths the app may use.
+    """
+    config_paths = get_config_paths()
+    data_paths = get_data_paths()
+
+    app_path_dict = {"config": config_paths, "data": data_paths}
+
+    print(dumps(app_path_dict, indent=2))
 
 
 def _update_config_with_files(
