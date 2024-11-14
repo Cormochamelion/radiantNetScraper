@@ -1,7 +1,32 @@
-import os
 import glob
+import os
+import sqlite3
 
 from pytest_cases import fixture
+
+
+TABLE_QUERY = "select name from sqlite_master where type = 'table';"
+
+
+def check_db(expected_db_path: str) -> None:
+    """
+    Run checks to ensure the usage database at `expected_db_path` is as expected.
+    """
+    assert os.path.exists(expected_db_path)
+
+    db_conn = sqlite3.connect(expected_db_path)
+    db_cursor = db_conn.cursor()
+    table_info = db_cursor.execute(TABLE_QUERY).fetchall()
+
+    # Ensure the db has the right number of tables
+    assert len(table_info) == 2
+
+    # Ensure each table contains data.
+    for table in table_info:
+        table_name = table[0]
+        table_n_entry_query = f"SELECT COUNT(1) FROM {table_name}"
+        table_n_entry = db_cursor.execute(table_n_entry_query).fetchall()[0][0]
+        assert table_n_entry > 0
 
 
 @fixture
