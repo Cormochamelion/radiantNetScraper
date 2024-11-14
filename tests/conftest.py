@@ -30,9 +30,16 @@ def check_db(expected_db_path: str) -> None:
 
 
 @fixture
-def json_test_files() -> list[str]:
+def json_test_file_dir() -> list[str]:
+    """
+    Provide the path of the test data dir.
+    """
+    return f"{os.getcwd()}/tests/test_data"
+
+
+@fixture
+def json_test_files(json_test_file_dir) -> list[str]:
     """
     Provide a list of json test files from the test data dir.
     """
-    test_data_path: str = f"{os.getcwd()}/tests/test_data"
-    return glob.glob(f"{test_data_path}/*.json")
+    return glob.glob(f"{json_test_file_dir}/*.json")
