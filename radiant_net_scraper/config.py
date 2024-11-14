@@ -12,13 +12,11 @@ from os.path import exists
 from platformdirs import site_config_dir, user_config_dir
 
 
-def get_config_paths() -> dict[str, str]:
+def get_config_paths(config_file_name: str = "config.json") -> dict[str, str]:
     """
     Get a dict of paths in which the app looks for configuration files.
     """
     scraper_meta = metadata("radiant_net_scraper")
-
-    config_file_name = "config.json"
 
     return {
         "default": str(
