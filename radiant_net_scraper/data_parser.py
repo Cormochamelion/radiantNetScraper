@@ -16,8 +16,7 @@ from radiant_net_scraper.database import Database
 # Disallow in-place modification of dataframes.
 pd.options.mode.copy_on_write = True
 
-# TODO Then add option to build database from json file list, and add to database right
-# after retrieving a json file.
+# TODO Add option to add to database right after retrieving a json file.
 
 
 class OutputDataFrames(NamedTuple):
