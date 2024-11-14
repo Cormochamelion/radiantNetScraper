@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-from radiant_net_scraper.config import get_chosen_raw_data_path
+from radiant_net_scraper.config import get_chosen_data_path, get_chosen_raw_data_path
 from radiant_net_scraper.scrape import run_scraper
 from radiant_net_scraper import data_parser
 
@@ -68,7 +68,7 @@ def parse_json_files():
     argparser.add_argument(
         "--output-db",
         "-o",
-        default="./generation_and_usage.sqlite3",
+        default=get_chosen_data_path(),
         type=str,
         help="Dir to which the database will be saved (default: %(default)s).",
     )
