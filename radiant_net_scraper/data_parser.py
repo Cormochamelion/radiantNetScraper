@@ -201,7 +201,3 @@ def parse_json_data(input_dir: str = "./", database_dir: str = "./"):
     """
     infilepaths = get_json_list(input_dir)
     parse_json_data_from_file_list(infilepaths, database_dir=database_dir)
-
-
-if __name__ == "__main__":
-    parse_json_data()
