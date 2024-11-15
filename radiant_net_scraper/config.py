@@ -255,6 +255,10 @@ def _config_logging(level: str = "info") -> None:
         level=log_level,
     )
 
+    # Explicitly set logging for urllib3 to remove clutter during debugging.
+    # FIXME Add a config option to undo this.
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 class Config:
     """
