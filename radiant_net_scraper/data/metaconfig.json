@@ -11,6 +11,10 @@
         "fronius_id": [
             "secrets",
             "fronius-id"
+        ],
+        "log_level": [
+            "logging",
+            "level"
         ]
     },
     "config_hierarchy": [

@@ -4,6 +4,8 @@ construct a config object.
 """
 
 import configparser as cfp
+import logging
+
 from importlib.metadata import metadata
 from importlib.resources import files
 from json import load, dumps
@@ -229,6 +231,31 @@ def _init_config() -> cfp.ConfigParser:
     return config
 
 
+def _config_logging(level: str = "info") -> None:
+    """
+    Perform configuration for the logging module.
+    """
+
+    match level.lower():
+        case "critical":
+            log_level = logging.CRITICAL
+        case "error":
+            log_level = logging.ERROR
+        case "warning":
+            log_level = logging.WARNING
+        case "info":
+            log_level = logging.INFO
+        case "debug":
+            log_level = logging.DEBUG
+        case _:
+            raise ValueError(f"Unknown log level: {level}.")
+
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=log_level,
+    )
+
+
 class Config:
     """
     Singleton wrapper to defer the creation of the config object from module load to
@@ -258,3 +285,13 @@ def get_chosen_data_path() -> str:
         location_type=config["database"]["location_type"],
         path=config["database"]["path"],
     )
+
+
+def get_configured_logger(name: str) -> logging.Logger:
+    """
+    Get the logger, configured by config and module name.
+    """
+    config = Config.get_config()
+    _config_logging(config["logging"]["level"])
+
+    return logging.getLogger(name)
