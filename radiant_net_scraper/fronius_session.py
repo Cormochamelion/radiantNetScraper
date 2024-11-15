@@ -11,11 +11,11 @@ class FroniusSession:
     login_url = "https://www.solarweb.com/Account/ExternalLogin"
     login_form_post_url = "https://login.fronius.com/commonauth"
     chart_url = "https://www.solarweb.com/Chart/GetChartNew"
-    key_pattern = re.compile("(?<=&sessionDataKey=)[a-z0-9\-]*")
+    key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
 
     def __init__(self, user, password, id):
         self.session = rq.Session()
-        self.key_pattern = re.compile("(?<=&sessionDataKey=)[a-z0-9\-]*")
+        self.key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
         self.session_key = None
         self.is_logged_in = False
         self.secret = {"username": user, "password": password, "id": id}
