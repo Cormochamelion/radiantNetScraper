@@ -3,6 +3,9 @@
         "location_type": "user",
         "path": "./generation_and_usage.sqlite3"
     },
+    "logging": {
+        "level": "info"
+    },
     "secrets": {
         "username": null,
         "password": null,
