@@ -15,8 +15,10 @@ from typing import NamedTuple, Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
 
-from radiant_net_scraper.config import get_chosen_data_path
+from radiant_net_scraper.config import get_chosen_data_path, get_configured_logger
 from radiant_net_scraper.database import Database
+
+LOGGER = get_configured_logger(__name__)
 
 # Disallow in-place modification of dataframes.
 pd.options.mode.copy_on_write = True
@@ -119,6 +121,7 @@ def load_daily_usage_json(filepath: str) -> dict:
     """
     # TODO Validate againts a schema to detect if the format has changed.
     # TODO Handle IO errors
+    LOGGER.debug("Loading file at %s...", filepath)
     with open(filepath, encoding="UTF-8") as infile:
         return json.load(infile)
 
@@ -211,5 +214,9 @@ def parse_json_data(input_dir: str = "./", **kwargs):
     """
     Parse all the json files in `input_dir` into a sqlite DB.
     """
+    LOGGER.info("Finding files to ingest in %s...", input_dir)
     infilepaths = get_json_list(input_dir)
+
+    LOGGER.debug("Files to be ingested: %s", infilepaths)
+
     parse_json_data_from_file_list(infilepaths, **kwargs)
