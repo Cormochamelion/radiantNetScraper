@@ -33,20 +33,22 @@ class FroniusSession:
             login_page_resp.raise_for_status()
 
         except rq.ConnectionError as e:
-            Exception(
+            raise ValueError(
                 f"Error getting Solarweb login page at {self.login_url}: {e}\n"
                 f"Is the network ok, is {self.landing_url} reachable?"
-            )
+            ) from e
 
         except rq.HTTPError as e:
-            Exception(f"Error getting Solarweb login page at {self.login_url}: {e}")
+            raise ValueError(
+                f"Error getting Solarweb login page at {self.login_url}: {e}"
+            ) from e
 
         session_key_match = re.search(self.key_pattern, login_page_resp.text)
 
         if not session_key_match:
-            Exception(
-                f"Couldn't extract session key from login response. Perhaps the login"
-                f"procedure has been changed by fronius?"
+            raise ValueError(
+                "Couldn't extract session key from login response. Perhaps the login"
+                "procedure has been changed by fronius?"
             )
 
         else:
@@ -79,9 +81,11 @@ class FroniusSession:
             for key in login_params.keys():
                 login_params[key] = login_soup.find("input", {"name": key}).get("value")
 
-        except AttributeError:
+        except AttributeError as e:
             # If those keys are not present, something went wrong with the login.
-            raise Exception(f"Error during login attempt. Are the credentials correct?")
+            raise ValueError(
+                f"Error during login attempt: {e}. Are the credentials correct?"
+            ) from e
 
         # We only care about getting the cookies.
         _ = self.session.post(url=callback_url, data=login_params)
