@@ -8,9 +8,12 @@ import datetime as dt
 from radiant_net_scraper.config import (
     Config,
     get_chosen_raw_data_path,
+    get_configured_logger,
     get_config_paths,
 )
 from radiant_net_scraper.fronius_session import FroniusSession
+
+LOGGER = get_configured_logger(__name__)
 
 
 def scrape_daily_data(secrets: dict, date: dt.date) -> dict:
@@ -64,9 +67,13 @@ def run_scraper(output_dir: str | None = None, days_ago: int = 1):
 
     date_to_parse = dt.date.today() - dt.timedelta(days=days_ago)
 
+    LOGGER.info("Starting retrieval for day %s...", date_to_parse)
     json_out = scrape_daily_data(secrets, date_to_parse)
 
     output_file = output_dir + date_to_parse.strftime("%Y%m%d.json")
+    LOGGER.info(
+        "... done retrieving day %s, saving JSON to %s.", date_to_parse, output_file
+    )
 
     with open(output_file, "w", encoding="UTF-8") as outfile:
         outfile.write(json_out)
