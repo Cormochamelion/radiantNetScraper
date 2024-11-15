@@ -2,9 +2,14 @@
 Manage the connection to the App's database.
 """
 
+import os
 import sqlite3
 
 import pandas as pd
+
+from radiant_net_scraper.config import get_configured_logger
+
+LOGGER = get_configured_logger(__name__)
 
 
 class Database:
@@ -13,7 +18,14 @@ class Database:
     """
 
     def __init__(self, db_path: str = "./generation_and_usage.sqlite3") -> None:
-        # TODO Check if already exsting, if so inform user.
+        LOGGER.info("Starting connection to SQLite DB at %s", db_path)
+
+        if not os.path.exists(db_path):
+            LOGGER.info("No file found at %s, a new one will be created.", db_path)
+
+        else:
+            LOGGER.info("Exsisting file found at %s, it will be modified.", db_path)
+
         self.db_conn = sqlite3.connect(db_path)
         self.db_conn.row_factory = sqlite3.Row
 
@@ -98,8 +110,12 @@ class Database:
             df.to_sql(table_name, self.db_conn, if_exists="append", index=False)
         except sqlite3.IntegrityError as e:
             if "UNIQUE constraint failed" in str(e):
-                # TODO Inform the user that insertion was skipped.
-                pass
+                LOGGER.warning(
+                    "Failed to insert data, some or all rows already have their "
+                    "primary key present in the DB. Error: %s",
+                    e,
+                )
+
             else:
                 raise e
 
