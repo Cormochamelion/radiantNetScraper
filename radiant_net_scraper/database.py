@@ -1,3 +1,7 @@
+"""
+Manage the connection to the App's database.
+"""
+
 import sqlite3
 
 import pandas as pd
