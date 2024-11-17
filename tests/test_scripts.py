@@ -3,6 +3,17 @@ import sys
 from radiant_net_scraper import scripts
 
 
+class TestShowAppPaths:
+    def test_success(self, monkeypatch):
+        """
+        Simply run the command, check that it doesn't crash.
+        """
+        args = ["TESTING"]
+
+        monkeypatch.setattr(sys, "argv", args)
+        scripts.show_app_paths()
+
+
 class TestParseJsonFiles:
     def test_dir_input(self, monkeypatch, tmp_path, json_test_file_dir):
         """
