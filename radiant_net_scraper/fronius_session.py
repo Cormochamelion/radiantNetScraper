@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup as bs
 import urllib.parse as ulparse
 import requests as rq
 
+from radiant_net_scraper.config import get_configured_logger
+
+LOGGER = get_configured_logger(__name__)
+
 
 class FroniusSession:
     """Class resonsible for managing the entire correspondence with fronius."""
@@ -24,15 +28,22 @@ class FroniusSession:
         self.is_logged_in = False
         self.secret = {"username": user, "password": password, "id": id}
 
+        LOGGER.info("Logging into Fronius Solarweb at %s...", self.landing_url)
         self.login()
+        LOGGER.info("... done logging in.")
 
     def login(self):
         """Get all necessary data and cookies to perform all operations."""
 
         # Just to get the __RequestVerificationToken
+        LOGGER.debug(
+            "Getting request verification token by visiting the landing page at %s...",
+            self.landing_url,
+        )
         _ = self.session.get(url=self.landing_url)
 
         try:
+            LOGGER.debug("Attempting to retrieve log-in page at %s...", self.login_url)
             login_page_resp = self.session.get(self.login_url, allow_redirects=True)
             login_page_resp.raise_for_status()
 
@@ -58,6 +69,10 @@ class FroniusSession:
         else:
             self.session_key = session_key_match.group()
 
+        LOGGER.debug(
+            "Filling and submitting login form to %s...", self.login_form_post_url
+        )
+
         login_form_resp = self.session.post(
             url=self.login_form_post_url,
             data={
@@ -66,6 +81,8 @@ class FroniusSession:
                 "sessionDataKey": self.session_key,
             },
         )
+
+        LOGGER.debug("Checking if they let us in...")
 
         callback_url = ulparse.parse_qs(ulparse.urlparse(login_page_resp.url).query)[
             "redirect_uri"
@@ -91,6 +108,10 @@ class FroniusSession:
                 f"Error during login attempt: {e}. Are the credentials correct?"
             ) from e
 
+        LOGGER.debug(
+            "Seems the credentials checked out, getting cookies from login callback "
+            "URL..."
+        )
         # We only care about getting the cookies.
         _ = self.session.post(url=callback_url, data=login_params)
 
@@ -116,6 +137,10 @@ class FroniusSession:
         """
         Retrieve the daily generation & usage chart from fronius.
         """
+        LOGGER.debug(
+            "Retrieving daily generation & usage statistics data from %s...",
+            self.chart_url,
+        )
         chart_resp = self.session.get(
             url=self.chart_url,
             data=self.chart_data(fronius_id=self.secret["id"], date=date),
