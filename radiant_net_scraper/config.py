@@ -6,7 +6,7 @@ construct a config object.
 import configparser as cfp
 from importlib.metadata import metadata
 from importlib.resources import files
-from json import load
+from json import load, dumps
 from os import environ, makedirs
 from os.path import exists
 from platformdirs import site_config_dir, user_config_dir, site_data_dir, user_data_dir
@@ -83,6 +83,20 @@ def get_chosen_raw_data_path() -> str:
         makedirs(raw_data_dir)
 
     return raw_data_dir
+
+
+def print_app_path_json() -> None:
+    """
+    Print JSON representation of the paths the app may use.
+    """
+    # FIXME Move this to scripts to be an argparsed command showing help texts as to
+    # what does what.
+    config_paths = get_config_paths()
+    raw_data_paths = get_data_paths(data_file_name="raw_data")
+
+    app_path_dict = {"config": config_paths, "raw_data": raw_data_paths}
+
+    print(dumps(app_path_dict, indent=2))
 
 
 def _update_config_with_files(
