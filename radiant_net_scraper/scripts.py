@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import argparse
+
+from radiant_net_scraper.config import get_chosen_raw_data_path
 from radiant_net_scraper.scrape import run_scraper
 
 
@@ -19,7 +21,7 @@ def scrape():
     argparser.add_argument(
         "--output-dir",
         "-o",
-        default="./",
+        default=get_chosen_raw_data_path() + "/",
         help="Where to put output files (default: %(default)s)",
     )
     argparser.add_argument(
