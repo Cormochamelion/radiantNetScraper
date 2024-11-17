@@ -25,6 +25,10 @@ pd.options.mode.copy_on_write = True
 
 
 class OutputDataFrames(NamedTuple):
+    """
+    Named tuple to keep a days data grouped together.
+    """
+
     raw: pd.DataFrame
     aggregated: pd.DataFrame
 
