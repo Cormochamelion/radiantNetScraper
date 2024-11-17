@@ -34,11 +34,12 @@ class OutputDataFrames(NamedTuple):
 
 
 @Pipe
-def filter_by(x: Iterable, filter: Iterable[bool]) -> Iterable:
+def filter_by(x: Iterable, flags: Iterable[bool]) -> Iterable:
     """
-    Filter `x` by the values of `filter`.
+    Filter `x` by the values of `flags`, keeping values in `x` if the value in `flags`
+    at the same position is truthy.
     """
-    return zip(x, filter) | where(lambda x: x[1]) | pmap(lambda x: x[0])
+    return zip(x, flags) | where(lambda x: x[1]) | pmap(lambda x: x[0])
 
 
 def json_is_paywalled(usage_json: dict) -> bool:
