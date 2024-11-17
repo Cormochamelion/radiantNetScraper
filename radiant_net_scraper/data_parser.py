@@ -119,7 +119,7 @@ def load_daily_usage_json(filepath: str) -> dict:
     """
     # TODO Validate againts a schema to detect if the format has changed.
     # TODO Handle IO errors
-    with open(filepath) as infile:
+    with open(filepath, encoding="UTF-8") as infile:
         return json.load(infile)
 
 

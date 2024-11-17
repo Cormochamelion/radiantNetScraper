@@ -68,5 +68,5 @@ def run_scraper(output_dir: str | None = None, days_ago: int = 1):
 
     output_file = output_dir + date_to_parse.strftime("%Y%m%d.json")
 
-    with open(output_file, "w") as outfile:
+    with open(output_file, "w", encoding="UTF-8") as outfile:
         outfile.write(json_out)
