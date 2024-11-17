@@ -1,3 +1,7 @@
+"""
+Retrieve data from a PV-System service provider.
+"""
+
 import json
 import datetime as dt
 
