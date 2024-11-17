@@ -1,3 +1,8 @@
+"""
+Parse generation & usage JSON files into dataframes and insert them into the apps
+database.
+"""
+
 import datetime as dt
 import numpy as np
 import pandas as pd
