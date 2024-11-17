@@ -56,9 +56,10 @@ def get_fronius_secrets() -> dict:
     return secrets
 
 
-def run_scraper(output_dir: str | None = None, days_ago: int = 1):
+def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> str:
     """
-    Load required secrets and save the daily usage data to an output dir.
+    Load required secrets and save the daily usage data to an output dir. The path to
+    the file the data was saved to is returned.
     """
     if output_dir is None:
         output_dir = get_chosen_raw_data_path() + "/"
@@ -77,3 +78,5 @@ def run_scraper(output_dir: str | None = None, days_ago: int = 1):
 
     with open(output_file, "w", encoding="UTF-8") as outfile:
         outfile.write(json_out)
+
+    return output_file
