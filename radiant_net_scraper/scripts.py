@@ -5,9 +5,33 @@ support.
 """
 import argparse
 
-from radiant_net_scraper.config import get_chosen_data_path, get_chosen_raw_data_path
+from radiant_net_scraper.config import (
+    get_chosen_data_path,
+    get_chosen_raw_data_path,
+    print_app_path_json,
+)
 from radiant_net_scraper.scrape import run_scraper
 from radiant_net_scraper import data_parser
+
+
+def show_app_paths():
+    """
+    Show under which paths the app expects certain things.
+    """
+    argparser = argparse.ArgumentParser(
+        "RadiantNet Paths",
+        description=(
+            "Print a JSON formatted string showing at which paths the app expects "
+            "certain things. Current fields are:"
+            "`config`: Where config files are read from. "
+            "`raw_data`: Where raw JSON files get saved to. "
+            "`data`: Where the database for processed data lives."
+        ),
+    )
+
+    argparser.parse_args()
+
+    print_app_path_json()
 
 
 def scrape():
