@@ -78,7 +78,7 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     # Check if the file contains data, or if it is too old and has been paywalled.
     if json_is_paywalled(usage_json):
         raise ValueError(
-            f"The usage dict is paywalled, can't extract any data from that."
+            "The usage dict is paywalled, can't extract any data from that."
         )
 
     data_series = usage_json["settings"]["series"]
