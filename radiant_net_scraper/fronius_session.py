@@ -113,6 +113,9 @@ class FroniusSession:
         }
 
     def get_chart(self, date):
+        """
+        Retrieve the daily generation & usage chart from fronius.
+        """
         chart_resp = self.session.get(
             url=self.chart_url,
             data=self.chart_data(fronius_id=self.secret["id"], date=date),
