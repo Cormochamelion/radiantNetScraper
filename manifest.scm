@@ -128,7 +128,8 @@ end of the session, e.g. for applicative benchmarking purposes.")
 (packages->manifest
   (append (list python-pytest-cases)
   (map specification->package
-    (list "python-beautifulsoup4"
+    (list "python-apscheduler"
+          "python-beautifulsoup4"
           "python-dotenv"
           "python-numpy"
           "python-pandas"
