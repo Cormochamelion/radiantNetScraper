@@ -1,7 +1,11 @@
 import json
 import datetime as dt
 
-from radiant_net_scraper.config import Config, get_config_paths
+from radiant_net_scraper.config import (
+    Config,
+    get_chosen_raw_data_path,
+    get_config_paths,
+)
 from radiant_net_scraper.fronius_session import FroniusSession
 
 
@@ -45,10 +49,13 @@ def get_fronius_secrets() -> dict:
     return secrets
 
 
-def run_scraper(output_dir: str = "./", days_ago: int = 1):
+def run_scraper(output_dir: str | None = None, days_ago: int = 1):
     """
     Load required secrets and save the daily usage data to an output dir.
     """
+    if output_dir is None:
+        output_dir = get_chosen_raw_data_path() + "/"
+
     secrets = get_fronius_secrets()
 
     date_to_parse = dt.date.today() - dt.timedelta(days=days_ago)
