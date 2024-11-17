@@ -7,9 +7,9 @@ import configparser as cfp
 from importlib.metadata import metadata
 from importlib.resources import files
 from json import load
-from os import environ
+from os import environ, makedirs
 from os.path import exists
-from platformdirs import site_config_dir, user_config_dir
+from platformdirs import site_config_dir, user_config_dir, site_data_dir, user_data_dir
 
 
 def get_config_paths(config_file_name: str = "config.json") -> dict[str, str]:
@@ -27,6 +27,62 @@ def get_config_paths(config_file_name: str = "config.json") -> dict[str, str]:
         "user": user_config_dir(scraper_meta["Name"], scraper_meta["Author"])
         + f"/{config_file_name}",
     }
+
+
+def get_data_paths(
+    data_file_name: str = "generation_and_usage.sqlite3",
+) -> dict[str, str]:
+    """
+    Get a dict of possible paths to where the app saves its data.
+    """
+    scraper_meta = metadata("radiant_net_scraper")
+
+    return {
+        "site": site_data_dir(scraper_meta["Name"], scraper_meta["Author"])
+        + f"/{data_file_name}",
+        "user": user_data_dir(scraper_meta["Name"], scraper_meta["Author"])
+        + f"/{data_file_name}",
+    }
+
+
+def choose_raw_data_path(
+    location_type: str,
+    path: str,
+    default_dirname: str = "raw_data",
+) -> str:
+    """
+    Based on the location type, choose where the database file should be put / looked
+    for. `location_type` should be either "user", "site", or "path". In the
+    first two cases, the path will use the corresponding platform dirs
+    (`user_data_path`, `site_data_path`), see `radiant-net-paths` to what that resolves
+    to. In the latter case, the "path" config value will be used.
+    """
+    data_paths = get_data_paths(default_dirname)
+
+    if location_type in data_paths:
+        raw_data_path = data_paths[location_type]
+
+    else:
+        raw_data_path = path
+
+    return raw_data_path
+
+
+def get_chosen_raw_data_path() -> str:
+    """
+    Get the raw data dir path as determined by the config, ensuring it exists.
+    """
+    config = Config.get_config()
+
+    raw_data_dir = choose_raw_data_path(
+        location_type=config["raw_data"]["location_type"],
+        path=config["raw_data"]["path"],
+    )
+
+    if not exists(raw_data_dir):
+        makedirs(raw_data_dir)
+
+    return raw_data_dir
 
 
 def _update_config_with_files(
