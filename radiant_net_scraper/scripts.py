@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+Wrappers around functions providing command line functionality with argument parsing
+support.
+"""
 import argparse
 
 from radiant_net_scraper.config import get_chosen_data_path, get_chosen_raw_data_path
