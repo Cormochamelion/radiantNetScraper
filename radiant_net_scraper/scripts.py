@@ -51,7 +51,7 @@ def parse_json_files():
     Parse scraped JSON files into a usable format.
     """
     argparser = argparse.ArgumentParser(
-        "fronius-parse-json-files",
+        "RadiantNet Parser",
         description=("Parse scraped JSON files into a usable format."),
     )
 
