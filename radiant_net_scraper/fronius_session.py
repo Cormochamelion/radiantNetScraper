@@ -98,12 +98,13 @@ class FroniusSession:
         # prerequisites are true.
         self.is_logged_in = True
 
+    def chart_data(self, fronius_id, date) -> dict:
         """
         Construct a dict of values needed to retrieve the daily generation & usage chart
         from fronius.
         """
         return {
-            "pvSystemId": id,
+            "pvSystemId": fronius_id,
             "year": date.year,
             "month": date.month,
             "day": date.day,
@@ -113,7 +114,8 @@ class FroniusSession:
 
     def get_chart(self, date):
         chart_resp = self.session.get(
-            url=self.chart_url, data=self.chart_data(id=self.secret["id"], date=date)
+            url=self.chart_url,
+            data=self.chart_data(fronius_id=self.secret["id"], date=date),
         )
 
         # TODO Add handling of case that chart_resp doesn't contain json.
