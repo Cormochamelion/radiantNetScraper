@@ -47,6 +47,9 @@ def scrape():
 
 
 def parse_json_files():
+    """
+    Parse scraped JSON files into a usable format.
+    """
     argparser = argparse.ArgumentParser(
         "fronius-parse-json-files",
         description=("Parse scraped JSON files into a usable format."),
