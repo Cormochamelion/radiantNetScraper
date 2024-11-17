@@ -163,11 +163,11 @@ def is_daily_json_file(path: str) -> bool:
     return os.path.isfile(path) and re.match(daily_json_re, basename) is not None
 
 
-def get_json_list(dir: str) -> list[str]:
+def get_json_list(input_dir: str) -> list[str]:
     """
     Find all the downloaded json files in a given dir and return them as a list.
     """
-    paths = [os.path.join(dir, path) for path in os.listdir(dir)]
+    paths = [os.path.join(input_dir, path) for path in os.listdir(input_dir)]
     return [*filter(is_daily_json_file, paths)]
 
 
