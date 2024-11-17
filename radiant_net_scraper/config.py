@@ -89,8 +89,6 @@ def print_app_path_json() -> None:
     """
     Print JSON representation of the paths the app may use.
     """
-    # FIXME Move this to scripts to be an argparsed command showing help texts as to
-    # what does what.
     config_paths = get_config_paths()
     raw_data_paths = get_data_paths(data_file_name="raw_data")
     data_paths = get_data_paths(data_file_name="generation_and_usage.sqlite3")
