@@ -1,3 +1,7 @@
+"""
+Manage the App's correspondence with Fronius Solarweb.
+"""
+
 import re
 from bs4 import BeautifulSoup as bs
 import urllib.parse as ulparse
