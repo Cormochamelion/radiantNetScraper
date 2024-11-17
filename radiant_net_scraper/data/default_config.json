@@ -3,5 +3,9 @@
         "username": null,
         "password": null,
         "fronius-id": null
+    },
+    "raw_data": {
+        "location_type": "user",
+        "path": "raw_data_files"
     }
 }
