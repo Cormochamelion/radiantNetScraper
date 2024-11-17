@@ -98,7 +98,10 @@ class FroniusSession:
         # prerequisites are true.
         self.is_logged_in = True
 
-    def chart_data(self, id, date):
+        """
+        Construct a dict of values needed to retrieve the daily generation & usage chart
+        from fronius.
+        """
         return {
             "pvSystemId": id,
             "year": date.year,
