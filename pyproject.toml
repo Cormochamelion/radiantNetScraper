@@ -32,5 +32,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["radiant_net_scraper"]
 
+[tool.setuptools.package-data]
+"radiant_net_scraper" = ["data/*.json"]
+
 [tool.pytest.ini_options]
 pythonpath = "tests/"
