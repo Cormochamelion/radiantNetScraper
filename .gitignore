@@ -3,4 +3,5 @@
 .env
 
 # pip install data
+build
 *.egg-info
