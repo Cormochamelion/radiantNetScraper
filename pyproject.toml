@@ -23,6 +23,7 @@ development = ["black==22.12.*", "pytest-cases<=3.8.5", "pytest<=8.3"]
 radiant-net-scraper = "radiant_net_scraper.scripts:scrape"
 radiant-net-parser = "radiant_net_scraper.scripts:parse_json_files"
 radiant-net-paths = "radiant_net_scraper.scripts:show_app_paths"
+radiant-net-run = "radiant_net_scraper.ingestion_flow:run_ingestion_continuously"
 
 [build-system]
 requires = ["setuptools"]
