@@ -128,14 +128,9 @@ def load_daily_usage_json(filepath: str) -> dict:
 
 def agg_daily_df(
     daily_df: pd.DataFrame,
-    sum_cols: list[str] = (
-        "FromGenToBatt",
-        "FromGenToGrid",
-        "ToConsumer",
-        "FromGenToConsumer",
-    ),
-    avg_cols: list[str] = ("StateOfCharge"),
-    time_cols: list[str] = ("year", "month", "day"),
+    sum_cols: list[str],
+    avg_cols: list[str],
+    time_cols: list[str],
 ) -> pd.DataFrame:
     """
     Sum all the usage / production data inside a daily  df.
