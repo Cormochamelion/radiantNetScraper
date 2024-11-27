@@ -180,6 +180,7 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
         "FromGenToBatt",
         "FromGenToGrid",
         "FromGenToConsumer",
+        "FromGenToWattPilot",
         "ToConsumer",
     )
     avg_cols = "StateOfCharge"

@@ -92,6 +92,7 @@ class Database:
             "sum_ToConsumer": "REAL",
             "sum_FromGenToConsumer": "REAL",
             "sum_FromGenToSomewhere": "REAL",
+            "sum_FromGenToWattPilot": "REAL",
             "sum_EmergencyPower": "",
             "mean_StateOfCharge": "REAL",
             "year": "INTEGER NOT NULL",
