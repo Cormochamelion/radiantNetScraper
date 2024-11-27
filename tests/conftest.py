@@ -8,7 +8,7 @@ from pytest_cases import fixture
 TABLE_QUERY = "select name from sqlite_master where type = 'table';"
 
 
-def check_db(expected_db_path: str) -> None:
+def check_db(expected_db_path: str, expect_rows: bool = True) -> None:
     """
     Run checks to ensure the usage database at `expected_db_path` is as expected.
     """
@@ -26,7 +26,9 @@ def check_db(expected_db_path: str) -> None:
         table_name = table[0]
         table_n_entry_query = f"SELECT COUNT(1) FROM {table_name}"
         table_n_entry = db_cursor.execute(table_n_entry_query).fetchall()[0][0]
-        assert table_n_entry > 0
+
+        if expect_rows:
+            assert table_n_entry > 0
 
 
 @fixture
