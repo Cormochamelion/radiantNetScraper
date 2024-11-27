@@ -180,7 +180,19 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     a dataframe of the data aggregated over the whole day.
     """
     daily_df = parse_usage_json(json_dict)
-    agg_df = agg_daily_df(daily_df)
+
+    sum_cols = (
+        "FromGenToBatt",
+        "FromGenToGrid",
+        "FromGenToConsumer",
+        "ToConsumer",
+    )
+    avg_cols = "StateOfCharge"
+    time_cols = ("year", "month", "day")
+
+    agg_df = agg_daily_df(
+        daily_df, time_cols=time_cols, avg_cols=avg_cols, sum_cols=sum_cols
+    )
 
     return OutputDataFrames(raw=daily_df, aggregated=agg_df)
 
