@@ -66,6 +66,7 @@ class Database:
             "FromGenToConsumer": "REAL",
             "StateOfCharge": "REAL",
             "FromGenToSomewhere": "REAL",
+            "FromGenToWattPilot": "REAL",
             "EmergencyPower": "",
             "time": "INTEGER NOT NULL UNIQUE",
             "year": "INTEGER NOT NULL",
