@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-azuretools.vscode-docker",
+        "tamasfe.even-better-toml",
+        "ms-python.pylint",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "sjhuangx.vscode-scheme",
+        "gruntfuggly.todo-tree"
+    ]
+}
