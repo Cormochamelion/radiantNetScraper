@@ -133,17 +133,22 @@ class FroniusSession:
             "view": view,
         }
 
-    def get_chart(self, date) -> dict:
+    def get_chart(self, date, chart_type: str = "production") -> dict:
         """
-        Retrieve the daily generation & usage chart from fronius.
+        Retrieve the daily generation & usage chart from fronius. See `chart_data` for
+        values of `chart_type`.
         """
         LOGGER.debug(
-            "Retrieving daily generation & usage statistics data from %s...",
+            "Retrieving daily %s statistics data from %s...",
+            chart_type,
             self.chart_url,
         )
+
         chart_resp = self.session.get(
             url=self.chart_url,
-            data=self.chart_data(fronius_id=self.secret["id"], date=date),
+            data=self.chart_data(
+                fronius_id=self.secret["id"], date=date, view=chart_type
+            ),
         )
 
         # TODO Add handling of case that chart_resp doesn't contain json.
