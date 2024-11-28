@@ -78,7 +78,7 @@ def save_chart_to_file(
     return output_file
 
 
-def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> str:
+def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> dict[str, str]:
     """
     Determine the date for which data should be retrieved and save the data for that
     date to disk.
@@ -88,6 +88,13 @@ def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> str:
 
     date_to_parse = dt.date.today() - dt.timedelta(days=days_ago)
 
-    output_file = save_chart_to_file(date=date_to_parse, output_dir=output_dir)
+    chart_types = ("production", "consumption")
 
-    return output_file
+    output_files = {
+        chart_type: save_chart_to_file(
+            date=date_to_parse, output_dir=output_dir, chart_type=chart_type
+        )
+        for chart_type in chart_types
+    }
+
+    return output_files
