@@ -1,10 +1,9 @@
-from pytest_cases import parametrize_with_cases
+import os
+from pytest_cases import parametrize
 
 from test_infra.common_test_infra import check_db, json_test_files
 
 from radiant_net_scraper import data_parser
-
-import test_parse_json_files_cases as case_module
 
 
 class TestParseJsonDataFromFileList:
@@ -21,9 +20,7 @@ class TestParseJsonDataFromFileList:
 
         check_db(expected_db_path)
 
-    @parametrize_with_cases(
-        "file", cases=case_module.TestParseJsonDataFromFileListCases.TestFileCases
-    )
+    @parametrize("file", json_test_files(), ids=os.path.basename)
     def test_files(self, tmp_path, file):
         """
         Test each file individually, mainly if ingestion runs without issues.
