@@ -1,6 +1,6 @@
 from pytest_cases import parametrize_with_cases
 
-from conftest import check_db
+from conftest import check_db, json_test_files
 
 from radiant_net_scraper import data_parser
 
@@ -8,13 +8,13 @@ import test_parse_json_files_cases as case_module
 
 
 class TestParseJsonDataFromFileList:
-    def test_success(self, json_test_files, tmp_path):
+    def test_success(self, tmp_path):
         """
         General test, check if all test files get read without error.
         """
         path_str = str(tmp_path)
         data_parser.parse_json_data_from_file_list(
-            json_test_files, db_path=path_str + "/generation_and_usage.sqlite3"
+            json_test_files(), db_path=path_str + "/generation_and_usage.sqlite3"
         )
 
         expected_db_path = f"{path_str}/generation_and_usage.sqlite3"
