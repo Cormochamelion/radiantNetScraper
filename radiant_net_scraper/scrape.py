@@ -58,27 +58,34 @@ def get_fronius_secrets() -> dict:
     return secrets
 
 
+def save_chart_to_file(date: dt.date, output_dir: str) -> str:
+    """
+    Retrieve the chart data for a given date and save it to a JSON file.
+    """
+    LOGGER.info("Starting retrieval for day %s...", date)
+
+    secrets = get_fronius_secrets()
+    json_out = scrape_daily_data(secrets, date)
+
+    output_file = output_dir + date.strftime("%Y%m%d.json")
+    LOGGER.info("... done retrieving day %s, saving JSON to %s.", date, output_file)
+
+    with open(output_file, "w", encoding="UTF-8") as outfile:
+        outfile.write(json_out)
+
+    return output_file
+
+
 def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> str:
     """
-    Load required secrets and save the daily usage data to an output dir. The path to
-    the file the data was saved to is returned.
+    Determine the date for which data should be retrieved and save the data for that
+    date to disk.
     """
     if output_dir is None:
         output_dir = get_chosen_raw_data_path() + "/"
 
-    secrets = get_fronius_secrets()
-
     date_to_parse = dt.date.today() - dt.timedelta(days=days_ago)
 
-    LOGGER.info("Starting retrieval for day %s...", date_to_parse)
-    json_out = scrape_daily_data(secrets, date_to_parse)
-
-    output_file = output_dir + date_to_parse.strftime("%Y%m%d.json")
-    LOGGER.info(
-        "... done retrieving day %s, saving JSON to %s.", date_to_parse, output_file
-    )
-
-    with open(output_file, "w", encoding="UTF-8") as outfile:
-        outfile.write(json_out)
+    output_file = save_chart_to_file(date=date_to_parse, output_dir=output_dir)
 
     return output_file
