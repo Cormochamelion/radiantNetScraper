@@ -119,10 +119,10 @@ class FroniusSession:
         # prerequisites are true.
         self.is_logged_in = True
 
-    def chart_data(self, fronius_id, date) -> dict:
+    def chart_data(self, fronius_id, date, view: str = "production") -> dict:
         """
         Construct a dict of values needed to retrieve the daily generation & usage chart
-        from fronius.
+        from fronius. Use `view` to specify either "production" or "consumption".
         """
         return {
             "pvSystemId": fronius_id,
@@ -130,7 +130,7 @@ class FroniusSession:
             "month": date.month,
             "day": date.day,
             "interval": "day",
-            "view": "production",
+            "view": view,
         }
 
     def get_chart(self, date) -> dict:
