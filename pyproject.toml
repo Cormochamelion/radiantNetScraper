@@ -36,4 +36,9 @@ packages = ["radiant_net_scraper"]
 "radiant_net_scraper" = ["data/*.json"]
 
 [tool.pytest.ini_options]
+markers = [
+    """requires_login: test requires credentials and will talk to Fronius \
+    (select with '-m \"requires_login\"').
+    """,
+]
 pythonpath = "tests/"
