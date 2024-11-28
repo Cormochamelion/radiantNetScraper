@@ -58,16 +58,18 @@ def get_fronius_secrets() -> dict:
     return secrets
 
 
-def save_chart_to_file(date: dt.date, output_dir: str) -> str:
+def save_chart_to_file(
+    date: dt.date, output_dir: str, chart_type: str = "production"
+) -> str:
     """
-    Retrieve the chart data for a given date and save it to a JSON file.
+    Retrieve the chart data for a given date and type and save it to a JSON file.
     """
     LOGGER.info("Starting retrieval for day %s...", date)
 
     secrets = get_fronius_secrets()
-    json_out = scrape_daily_data(secrets, date)
+    json_out = scrape_daily_data(secrets, date=date, chart_type=chart_type)
 
-    output_file = output_dir + date.strftime("%Y%m%d.json")
+    output_file = output_dir + date.strftime(f"%Y%m%d_{chart_type}.json")
     LOGGER.info("... done retrieving day %s, saving JSON to %s.", date, output_file)
 
     with open(output_file, "w", encoding="UTF-8") as outfile:
