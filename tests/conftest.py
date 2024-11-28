@@ -2,8 +2,6 @@ import glob
 import os
 import sqlite3
 
-from pytest_cases import fixture
-
 
 TABLE_QUERY = "select name from sqlite_master where type = 'table';"
 
@@ -31,7 +29,6 @@ def check_db(expected_db_path: str, expect_rows: bool = True) -> None:
             assert table_n_entry > 0
 
 
-@fixture
 def json_test_file_dir() -> list[str]:
     """
     Provide the path of the test data dir.
@@ -39,7 +36,6 @@ def json_test_file_dir() -> list[str]:
     return f"{os.getcwd()}/tests/test_data"
 
 
-@fixture
 def json_test_files(json_test_file_dir) -> list[str]:
     """
     Provide a list of json test files from the test data dir.
