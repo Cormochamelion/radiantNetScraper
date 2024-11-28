@@ -4,9 +4,14 @@ import pytest
 from radiant_net_scraper import scrape
 
 
-@pytest.mark.requires_login
 class TestRunScraper:
-    def test_success(self, request, tmpdir):
+    def test_success(self, arbitrary_file_dummy_fronius_session, tmpdir):
+        out_file = scrape.run_scraper(output_dir=f"{tmpdir}/")
+
+        assert os.path.exists(out_file)
+
+    @pytest.mark.requires_login
+    def test_actual_retrieval(self, request, tmpdir):
         if "requires_login" not in request.config.getoption("-m", default=""):
             pytest.skip(
                 "Requires login and will talk to Fronius. If credentials are set and"
