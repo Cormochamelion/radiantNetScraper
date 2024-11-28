@@ -1,6 +1,6 @@
 import sys
 
-from conftest import json_test_file_dir, json_test_files
+from test_infra.common_test_infra import json_test_file_dir, json_test_files
 
 from radiant_net_scraper import scripts
 

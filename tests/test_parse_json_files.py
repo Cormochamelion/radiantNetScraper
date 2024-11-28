@@ -1,6 +1,6 @@
 from pytest_cases import parametrize_with_cases
 
-from conftest import check_db, json_test_files
+from test_infra.common_test_infra import check_db, json_test_files
 
 from radiant_net_scraper import data_parser
 

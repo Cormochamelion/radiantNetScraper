@@ -36,8 +36,8 @@ def json_test_file_dir() -> list[str]:
     return f"{os.getcwd()}/tests/test_data"
 
 
-def json_test_files(json_test_file_dir) -> list[str]:
+def json_test_files() -> list[str]:
     """
     Provide a list of json test files from the test data dir.
     """
-    return glob.glob(f"{json_test_file_dir}/*.json")
+    return glob.glob(f"{json_test_file_dir()}/*.json")
