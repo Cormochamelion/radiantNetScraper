@@ -22,7 +22,7 @@ def random_date(
     return start + datetime.timedelta(random_dist)
 
 
-def anonymize_series_data(series: list[dict], timestamp_diff: int) -> list[dict]:
+def anonymize_series_data(series: list[dict], timestamp_diff: int):
     """
     Move series timestamps by `timestamp_diff` and jiggle the date around a bit.
     """
@@ -36,10 +36,8 @@ def anonymize_series_data(series: list[dict], timestamp_diff: int) -> list[dict]
             # Add random data factor to remaining cell elements
             for i in range(1, len(cell)):
                 # FIXME Sure up this type checking.
-                if type(cell[i]) is not str:
+                if not isinstance(cell[i], str):
                     cell[i] = round(cell[i] * random_data_factor, 2)
-
-    return series
 
 
 def anonymize_data_json(infile: str, outfile: str) -> None:
@@ -75,9 +73,8 @@ def anonymize_data_json(infile: str, outfile: str) -> None:
 
     # Difference on the scale of the timestamp between actual and fictional date.
     date_diff = (time_start - actual_date).total_seconds() * TIMESTAMP_SECONDS_FACTOR
-    anon_dict["settings"]["series"] = anonymize_series_data(
-        anon_dict["settings"]["series"], date_diff
-    )
+
+    anonymize_series_data(anon_dict["settings"]["series"], date_diff)
 
     with open(outfile, "w") as output:
         json.dump(anon_dict, output, indent=2)
