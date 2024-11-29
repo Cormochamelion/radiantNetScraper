@@ -3,7 +3,11 @@
 from copy import deepcopy
 import datetime
 import json
+import pandas as pd
 import random
+import re
+
+from radiant_net_scraper.data_parser import series_data_to_df, timestamp_to_posix
 
 DATE_FORMAT = r"%d.%m.%Y"
 # Conversion factor for seconds to the fronius timestamp.
@@ -40,6 +44,54 @@ def anonymize_series_data(series: list[dict], timestamp_diff: int):
                     cell[i] = round(cell[i] * random_data_factor, 2)
 
 
+def calculate_series_kwh(series: dict) -> float:
+    """
+    Calculate the amount of kwH in a series. Errors if the series does not contain
+    power data.
+    """
+    unit = series["yAxis"]
+    if not unit == "W":
+        raise ValueError(
+            f"Series does not contain power data, unit is {unit}, not 'W'."
+        )
+
+    series_df = series_data_to_df(series_data=series["data"])
+
+    indexer = pd.api.indexers.FixedForwardWindowIndexer(window_size=2)
+
+    series_df["time_step"] = (
+        series_df["time"]
+        .rolling(window=indexer)
+        .apply(
+            lambda sub_series: timestamp_to_posix(sub_series.iloc[1])
+            - timestamp_to_posix(sub_series.iloc[0])
+        )
+        # I'm assuming the last value is the same as the previous one. This is a
+        # compromise between assuming all values are the same and saying it's impossible
+        # to know the last value.
+        .ffill()
+        # Convert seconds to hours.
+        .apply(lambda seconds: seconds / (60**2))
+    )
+
+    return sum(series_df["time_step"] * series_df["data"]) / 1e3
+
+
+def calculate_daily_kwh(series_data=list[dict], id_pattern=r"^FromGen") -> float:
+    """
+    Calulate the sum value of all series where the ids match a pattern.
+    """
+    selected_series_daily_kwh = [
+        calculate_series_kwh(series)
+        for series in series_data
+        if re.search(id_pattern, series["id"])
+    ]
+
+    total_daily_kwh = sum(selected_series_daily_kwh)
+
+    return round(total_daily_kwh, 2)
+
+
 def anonymize_data_json(infile: str, outfile: str) -> None:
     """
     Replace actual user data in a file with plausible random data.
@@ -53,9 +105,6 @@ def anonymize_data_json(infile: str, outfile: str) -> None:
     anon_dict = deepcopy(json_dict)
 
     anon_dict["title"] = spoofed_date.strftime(DATE_FORMAT)
-    random_sum_val = str(round(random.random() * 1000, 2)).replace(".", ",")
-    anon_dict["sumValue"] = f"{random_sum_val} kWh"
-    anon_dict["settings"]["sumValue"] = f"{random_sum_val} kWh"
 
     time_start = datetime.datetime(
         spoofed_date.year, spoofed_date.month, spoofed_date.day
@@ -75,6 +124,10 @@ def anonymize_data_json(infile: str, outfile: str) -> None:
     date_diff = (time_start - actual_date).total_seconds() * TIMESTAMP_SECONDS_FACTOR
 
     anonymize_series_data(anon_dict["settings"]["series"], date_diff)
+
+    new_sum_val = calculate_daily_kwh(json_dict["settings"]["series"])
+    anon_dict["sumValue"] = f"{new_sum_val} kWh"
+    anon_dict["settings"]["sumValue"] = f"{new_sum_val} kWh"
 
     with open(outfile, "w") as output:
         json.dump(anon_dict, output, indent=2)
