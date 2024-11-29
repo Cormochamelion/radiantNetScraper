@@ -41,3 +41,10 @@ def json_test_files() -> list[str]:
     Provide a list of json test files from the test data dir.
     """
     return glob.glob(f"{json_test_file_dir()}/*.json")
+
+
+def arbitrary_json_test_file() -> str:
+    """
+    Provide the path to an arbitrary JSON test file.
+    """
+    return json_test_files()[0]
