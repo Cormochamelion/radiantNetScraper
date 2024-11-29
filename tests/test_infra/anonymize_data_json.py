@@ -26,7 +26,7 @@ def anonymize_series_data(series: list[dict], timestamp_diff: int) -> list[dict]
     Move series timestamps by `timestamp_diff` and jiggle the date around a bit.
     """
     # Use random factor between 0.5 & 1.5 (range of lenght 1.5, minimum of 0.5).
-    random_data_factor = (random.random() * 1.5) + 0.5
+    random_data_factor = random.random() + 0.5
     for data_series in series:
         for cell in data_series["data"]:
             # Modify cell in place.
