@@ -8,9 +8,6 @@ DATE_FORMAT = r"%d.%m.%Y"
 # Conversion factor for seconds to the fronius timestamp.
 TIMESTAMP_SECONDS_FACTOR = 1000
 
-# TODO Ensure when anonymizing multiple json files, that data across files is
-# consistent (i.e., sumValue increases along time).
-
 
 def random_date(
     start: datetime.date = datetime.date(1970, 1, 1),
