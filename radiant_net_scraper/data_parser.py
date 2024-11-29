@@ -52,6 +52,13 @@ def json_is_paywalled(usage_json: dict) -> bool:
     return usage_json["isPremiumFeature"]
 
 
+def timestamp_to_posix(timestamp) -> int:
+    """
+    Convert the fronius timestamp to POSIX time in seconds.
+    """
+    return timestamp / 1e3
+
+
 def series_data_to_df(series_data: list[list[int,]]) -> pd.DataFrame:
     """
     Convert an individual data series containing timestamp & value to a dataframe.
@@ -100,7 +107,8 @@ def parse_usage_json(usage_json: dict) -> pd.DataFrame:
     usage_df = reduce(lambda x, y: pd.merge(x, y, how="outer", on="time"), series_dfs)
 
     time_objs = [
-        dt.datetime.fromtimestamp(timestamp / 1e3) for timestamp in usage_df.time
+        dt.datetime.fromtimestamp(timestamp_to_posix(timestamp))
+        for timestamp in usage_df.time
     ]
 
     usage_df = usage_df.assign(
