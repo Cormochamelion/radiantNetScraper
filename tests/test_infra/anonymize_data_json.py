@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from copy import deepcopy
 import datetime
 import json
 import random
@@ -51,7 +52,7 @@ def anonymize_data_json(infile: str, outfile: str) -> None:
     actual_date = datetime.datetime.strptime(json_dict["title"], DATE_FORMAT)
     spoofed_date = random_date()
 
-    anon_dict = json_dict
+    anon_dict = deepcopy(json_dict)
 
     anon_dict["title"] = spoofed_date.strftime(DATE_FORMAT)
     random_sum_val = str(round(random.random() * 1000, 2)).replace(".", ",")
