@@ -92,7 +92,9 @@ def calculate_daily_kwh(series_data=list[dict], id_pattern=r"^FromGen") -> float
     return round(total_daily_kwh, 2)
 
 
-def anonymize_data_json(infile: str, outfile: str) -> None:
+def anonymize_data_json(
+    infile: str, outfile: str, spoofed_date: datetime.date = random_date()
+) -> None:
     """
     Replace actual user data in a file with plausible random data.
     """
@@ -100,7 +102,6 @@ def anonymize_data_json(infile: str, outfile: str) -> None:
         json_dict = json.load(input)
 
     actual_date = datetime.datetime.strptime(json_dict["title"], DATE_FORMAT)
-    spoofed_date = random_date()
 
     anon_dict = deepcopy(json_dict)
 
