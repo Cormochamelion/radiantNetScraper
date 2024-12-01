@@ -98,7 +98,7 @@ def anonymize_data_json(
     """
     Replace actual user data in a file with plausible random data.
     """
-    with open(infile, "r") as input:
+    with open(infile, "r", encoding="UTF-8") as input:
         json_dict = json.load(input)
 
     actual_date = datetime.datetime.strptime(json_dict["title"], DATE_FORMAT)
@@ -130,7 +130,7 @@ def anonymize_data_json(
     anon_dict["sumValue"] = f"{new_sum_val} kWh"
     anon_dict["settings"]["sumValue"] = f"{new_sum_val} kWh"
 
-    with open(outfile, "w") as output:
+    with open(outfile, "w", encoding="UTF-8") as output:
         json.dump(anon_dict, output, indent=2)
 
 
