@@ -138,12 +138,16 @@ if __name__ == "__main__":
 
     parser = ArgumentParser("anonymize-data-json")
     parser.add_argument(
-        "--infile", "-i", help="Input JSON file", type=str, required=True
+        "--infiles", "-i", help="Input JSON files", type=str, required=True, nargs="+"
     )
     parser.add_argument(
-        "--outfile", "-o", help="Output JSON file", type=str, required=True
+        "--outfiles", "-o", help="Output JSON files", type=str, required=True, nargs="+"
     )
 
     args = parser.parse_args()
 
-    anonymize_data_json(args.infile, args.outfile)
+    if not len(args.infiles) == len(args.outfiles):
+        raise ValueError("`infiles` and `outfiles` need to have the same length.")
+
+    for infile, outfile in zip(args.infiles, args.outfiles):
+        anonymize_data_json(infile, outfile)
