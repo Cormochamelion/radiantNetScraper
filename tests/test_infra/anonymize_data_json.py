@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 import datetime
+from itertools import groupby
 import json
 import os
 import pandas as pd
@@ -173,10 +174,24 @@ def anonymize_with_sequential_dates(
             f"{output_dir}/{basename}_anon.{extension}"
             for basename, extension in name_pairs
         ]
+
+    # Group input & output files by chart type.
+    grouped_file_pairs = groupby(
+        sorted(zip(infiles, outfiles), key=lambda file_pair: file_pair[0]),
+        key=lambda file_pair: re.sub(r"(_consumption|_production)", "", file_pair[0]),
+    )
+
     spoofed_date = random_date()
 
-    for infile, outfile in zip(infiles, outfiles):
-        anonymize_data_json(infile, outfile, spoofed_date=spoofed_date)
+    for group in grouped_file_pairs:
+        file_pairs = group[1]
+        data_factor = random_data_factor()
+
+        for infile, outfile in file_pairs:
+            anonymize_data_json(
+                infile, outfile, spoofed_date=spoofed_date, data_factor=data_factor
+            )
+
         spoofed_date += datetime.timedelta(days=1)
 
 
