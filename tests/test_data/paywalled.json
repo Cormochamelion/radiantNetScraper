@@ -43,8 +43,8 @@
     ],
     "xAxis": {
       "type": "datetime",
-      "max": 1172271300000.0,
-      "min": 1172185200000.0,
+      "max": 1229813700000.0,
+      "min": 1229727600000.0,
       "crosshair": true,
       "tickWidth": 1,
       "tickColor": "#ECEDED",
@@ -52,7 +52,7 @@
     }
   },
   "specialView": "noPremium",
-  "title": "23.02.2007",
+  "title": "20.12.2008",
   "showBattInfo": false,
   "sumValue": "0 kWh"
 }
