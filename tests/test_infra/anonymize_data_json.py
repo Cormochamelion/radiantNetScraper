@@ -103,7 +103,10 @@ def calculate_daily_kwh(series_data=list[dict], id_pattern=r"^FromGen") -> float
 
 
 def anonymize_data_json(
-    infile: str, outfile: str, spoofed_date: datetime.date = random_date()
+    infile: str,
+    outfile: str,
+    spoofed_date: datetime.date = random_date(),
+    data_factor: float | None = None,
 ) -> None:
     """
     Replace actual user data in a file with plausible random data.
@@ -136,7 +139,14 @@ def anonymize_data_json(
         int((time_start - actual_date).total_seconds()) * TIMESTAMP_SECONDS_FACTOR
     )
 
-    anonymize_series_data(anon_dict["settings"]["series"], date_diff)
+    # Use the data_factor arg if not none, else let `anonymize_series_data` use its
+    # default.
+    if data_factor:
+        anon_args = {"data_factor": data_factor}
+    else:
+        anon_args = {}
+
+    anonymize_series_data(anon_dict["settings"]["series"], date_diff, **anon_args)
 
     new_sum_val = calculate_daily_kwh(json_dict["settings"]["series"])
     anon_dict["sumValue"] = f"{new_sum_val} kWh"
