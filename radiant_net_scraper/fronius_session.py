@@ -206,4 +206,7 @@ class FroniusSession:
                 fronius_id=secrets["fronius-id"],
             )
 
+        if not cls._session.is_logged_in():
+            cls._session.login()
+
         return cls._session
