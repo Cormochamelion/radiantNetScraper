@@ -34,12 +34,14 @@ def random_data_factor(width: float = 1.0, min: float = 0.5):
     return (random.random() * width) + min
 
 
-def anonymize_series_data(series: list[dict], timestamp_diff: int):
+def anonymize_series_data(
+    series: list[dict],
+    timestamp_diff: int,
+    data_factor=random_data_factor(width=1, min=0.5),
+):
     """
     Move series timestamps by `timestamp_diff` and jiggle the date around a bit.
     """
-    # Use random factor between 0.5 & 1.5 (range of length 1, minimum of 0.5).
-    data_factor = random_data_factor(width=1, min=0.5)
     for data_series in series:
         for cell in data_series["data"]:
             # Modify cell in place.
