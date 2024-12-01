@@ -134,6 +134,17 @@ def anonymize_data_json(
         json.dump(anon_dict, output, indent=2)
 
 
+def anonymize_multiple_files(infiles: list[str], outfiles: list[str]):
+    """
+    Anonymize multiple JSON files, keeping their dates sequential.
+    """
+    if not len(infiles) == len(outfiles):
+        raise ValueError("`infiles` and `outfiles` need to have the same length.")
+
+    for infile, outfile in zip(infiles, outfiles):
+        anonymize_data_json(infile, outfile)
+
+
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
@@ -147,8 +158,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if not len(args.infiles) == len(args.outfiles):
-        raise ValueError("`infiles` and `outfiles` need to have the same length.")
-
-    for infile, outfile in zip(args.infiles, args.outfiles):
-        anonymize_data_json(infile, outfile)
+    anonymize_multiple_files(args.infiles, args.outfiles)
