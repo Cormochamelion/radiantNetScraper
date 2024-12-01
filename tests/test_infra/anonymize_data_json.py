@@ -134,15 +134,18 @@ def anonymize_data_json(
         json.dump(anon_dict, output, indent=2)
 
 
-def anonymize_multiple_files(infiles: list[str], outfiles: list[str]):
+def anonymize_with_sequential_dates(infiles: list[str], outfiles: list[str]):
     """
     Anonymize multiple JSON files, keeping their dates sequential.
     """
     if not len(infiles) == len(outfiles):
         raise ValueError("`infiles` and `outfiles` need to have the same length.")
 
+    spoofed_date = random_date()
+
     for infile, outfile in zip(infiles, outfiles):
-        anonymize_data_json(infile, outfile)
+        anonymize_data_json(infile, outfile, spoofed_date=spoofed_date)
+        spoofed_date += datetime.timedelta(days=1)
 
 
 if __name__ == "__main__":
@@ -158,4 +161,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    anonymize_multiple_files(args.infiles, args.outfiles)
+    anonymize_with_sequential_dates(args.infiles, args.outfiles)
