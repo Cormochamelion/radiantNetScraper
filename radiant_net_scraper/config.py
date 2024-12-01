@@ -305,3 +305,31 @@ def get_configured_logger(name: str) -> logging.Logger:
     _config_logging(config["logging"]["level"])
 
     return logging.getLogger(name)
+
+
+def get_fronius_secrets() -> dict:
+    """
+    Obtain a dict of required secrets for fronius, in this case from the config object.
+    """
+    config = Config.get_config()
+
+    secrets = {
+        "username": config["secrets"]["username"],
+        "password": config["secrets"]["password"],
+        "fronius-id": config["secrets"]["fronius-id"],
+    }
+
+    if None in secrets.values():
+        none_secrets = ", ".join([x[0] for x in secrets.items() if x[1] is None])
+
+        config_paths = get_config_paths()
+        user_config = config_paths["user"]
+        site_config = config_paths["site"]
+
+        raise ValueError(
+            f"Fields {none_secrets} were not filled. Ensure you set the secrets "
+            f"either in the environment, the machine-wide config at {site_config}, or "
+            f"your personal config at {user_config}."
+        )
+
+    return secrets
