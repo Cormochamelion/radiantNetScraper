@@ -26,12 +26,20 @@ def random_date(
     return start + datetime.timedelta(random_dist)
 
 
+def random_data_factor(width: float = 1.0, min: float = 0.5):
+    """
+    Generate a random data factor from a uniform distribution with a width and a
+    minimum.
+    """
+    return (random.random() * width) + min
+
+
 def anonymize_series_data(series: list[dict], timestamp_diff: int):
     """
     Move series timestamps by `timestamp_diff` and jiggle the date around a bit.
     """
-    # Use random factor between 0.5 & 1.5 (range of lenght 1.5, minimum of 0.5).
-    random_data_factor = random.random() + 0.5
+    # Use random factor between 0.5 & 1.5 (range of length 1, minimum of 0.5).
+    data_factor = random_data_factor(width=1, min=0.5)
     for data_series in series:
         for cell in data_series["data"]:
             # Modify cell in place.
@@ -41,7 +49,7 @@ def anonymize_series_data(series: list[dict], timestamp_diff: int):
             for i in range(1, len(cell)):
                 # FIXME Sure up this type checking.
                 if not isinstance(cell[i], str):
-                    cell[i] = round(cell[i] * random_data_factor, 2)
+                    cell[i] = round(cell[i] * data_factor, 2)
 
 
 def calculate_series_kwh(series: dict) -> float:
