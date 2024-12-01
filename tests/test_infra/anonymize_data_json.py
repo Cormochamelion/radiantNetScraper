@@ -3,6 +3,7 @@
 from copy import deepcopy
 import datetime
 import json
+import os
 import pandas as pd
 import random
 import re
@@ -156,13 +157,22 @@ def anonymize_data_json(
         json.dump(anon_dict, output, indent=2)
 
 
-def anonymize_with_sequential_dates(infiles: list[str], outfiles: list[str]):
+def anonymize_with_sequential_dates(
+    infiles: list[str], outfiles: list[str] | None = None, output_dir: str = "./"
+):
     """
     Anonymize multiple JSON files, keeping their dates sequential.
     """
-    if not len(infiles) == len(outfiles):
-        raise ValueError("`infiles` and `outfiles` need to have the same length.")
+    if outfiles is not None:
+        if not len(infiles) == len(outfiles):
+            raise ValueError("`infiles` and `outfiles` need to have the same length.")
 
+    else:
+        name_pairs = [os.path.basename(infile).split(".", 1) for infile in infiles]
+        outfiles = [
+            f"{output_dir}/{basename}_anon.{extension}"
+            for basename, extension in name_pairs
+        ]
     spoofed_date = random_date()
 
     for infile, outfile in zip(infiles, outfiles):
@@ -178,9 +188,18 @@ if __name__ == "__main__":
         "--infiles", "-i", help="Input JSON files", type=str, required=True, nargs="+"
     )
     parser.add_argument(
-        "--outfiles", "-o", help="Output JSON files", type=str, required=True, nargs="+"
+        "--outfiles", "-o", help="Output JSON files", type=str, nargs="*", default=None
+    )
+    parser.add_argument(
+        "--output-dir",
+        "-d",
+        help=(
+            "Output dir as an alternative to outfiles. Ignored if outfiles "
+            "are given. (default: %(default)s)"
+        ),
+        default="./",
     )
 
     args = parser.parse_args()
 
-    anonymize_with_sequential_dates(args.infiles, args.outfiles)
+    anonymize_with_sequential_dates(args.infiles, args.outfiles, args.output_dir)
