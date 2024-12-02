@@ -8,6 +8,7 @@
         "ms-python.python",
         "ms-python.debugpy",
         "sjhuangx.vscode-scheme",
-        "gruntfuggly.todo-tree"
+        "gruntfuggly.todo-tree",
+        "ms-python.mypy-type-checker"
     ]
 }
