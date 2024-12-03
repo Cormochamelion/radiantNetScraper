@@ -8,23 +8,18 @@ import datetime as dt
 from radiant_net_scraper.config import (
     get_chosen_raw_data_path,
     get_configured_logger,
-    get_fronius_secrets,
 )
 from radiant_net_scraper.fronius_session import FroniusSession
 
 LOGGER = get_configured_logger(__name__)
 
 
-def scrape_daily_data(secrets: dict, *get_chart_args, **get_chart_kwars) -> str:
+def scrape_daily_data(*get_chart_args, **get_chart_kwars) -> str:
     """
     Use a login session to obtain the daily data chart for a given date as a serialized
     JSON dict.
     """
-    fsession = FroniusSession(
-        user=secrets["username"],
-        password=secrets["password"],
-        fronius_id=secrets["fronius-id"],
-    )
+    fsession = FroniusSession.get_session()
 
     return json.dumps(fsession.get_chart(*get_chart_args, **get_chart_kwars))
 
@@ -37,8 +32,7 @@ def save_chart_to_file(
     """
     LOGGER.info("Starting retrieval for day %s...", date)
 
-    secrets = get_fronius_secrets()
-    json_out = scrape_daily_data(secrets, date=date, chart_type=chart_type)
+    json_out = scrape_daily_data(date, chart_type)
 
     output_file = output_dir + date.strftime(f"%Y%m%d_{chart_type}.json")
     LOGGER.info("... done retrieving day %s, saving JSON to %s.", date, output_file)

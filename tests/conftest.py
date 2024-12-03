@@ -1,7 +1,7 @@
 from json import load
 from pytest_cases import fixture
 
-from radiant_net_scraper.fronius_session import FroniusSession
+from radiant_net_scraper.fronius_session import _FroniusSession
 from test_infra.common_test_infra import arbitrary_json_test_file
 
 
@@ -19,9 +19,9 @@ def arbitrary_file_dummy_fronius_session(monkeypatch) -> None:
     with open(arbitrary_json_test_file(), encoding="UTF-8") as infile:
         source_json_data = load(infile)
 
-    monkeypatch.setattr(FroniusSession, "login", lambda *args, **kwargs: None)
+    monkeypatch.setattr(_FroniusSession, "login", lambda *args, **kwargs: None)
     monkeypatch.setattr(
-        FroniusSession, "get_chart", lambda *args, **kwargs: source_json_data
+        _FroniusSession, "get_chart", lambda *args, **kwargs: source_json_data
     )
 
     return None
