@@ -1,5 +1,7 @@
+from itertools import groupby
 import glob
 import os
+import re
 import sqlite3
 
 
@@ -38,13 +40,43 @@ def json_test_file_dir() -> str:
 
 def json_test_files() -> list[str]:
     """
-    Provide a list of json test files from the test data dir.
+    Provide a list of json test files date from the test data dir.
     """
-    return glob.glob(f"{json_test_file_dir()}/*.json")
+    return sorted(glob.glob(f"{json_test_file_dir()}/*.json"))
 
 
 def arbitrary_json_test_file() -> str:
     """
-    Provide the path to an arbitrary JSON test file.
+    Provide the paths to the JSON test files of an arbitrary group of generation and
+    usage files.
     """
     return json_test_files()[0]
+
+
+def json_test_file_groups() -> list[tuple[str, ...]]:
+    """
+    Provide a list of groups of json test files belonging to one date from the test
+    data dir.
+    """
+    all_files = sorted(glob.glob(f"{json_test_file_dir()}/*.json"))
+
+    group_replace_re = re.compile(r"(_consumption|_production)")
+
+    groupings = groupby(
+        all_files,
+        key=lambda file: re.sub(group_replace_re, "", file),
+    )
+
+    return [tuple([*group]) for _, group in groupings]
+
+
+def arbitrary_json_test_group() -> tuple[str, ...]:
+    """
+    Provide the paths to the JSON test files of an arbitrary group of generation and
+    usage files.
+    """
+    for group in json_test_file_groups():
+        if len(group) >= 2:
+            return group
+
+    return tuple()
