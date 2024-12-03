@@ -1,6 +1,6 @@
 import sys
 
-from test_infra.common_test_infra import json_test_file_dir, json_test_files
+from test_infra.common_test_infra import json_test_file_dir, json_test_file_groups
 
 from radiant_net_scraper import scripts
 
@@ -34,7 +34,13 @@ class TestParseJsonFiles:
         Test that basic ingestion of the test JSON files works.
         """
         db_path = f"{str(tmp_path)}/db.sqlite3"
-        args = ["TESTING", "--input-files", *json_test_files(), "--output-db", db_path]
+        args = [
+            "TESTING",
+            "--input-files",
+            *json_test_file_groups(),
+            "--output-db",
+            db_path,
+        ]
 
         monkeypatch.setattr(sys, "argv", args)
 
