@@ -7,12 +7,12 @@ from bs4 import BeautifulSoup as bs
 import urllib.parse as ulparse
 import requests as rq
 
-from radiant_net_scraper.config import get_configured_logger
+from radiant_net_scraper.config import get_configured_logger, get_fronius_secrets
 
 LOGGER = get_configured_logger(__name__)
 
 
-class FroniusSession:
+class _FroniusSession:
     """Class resonsible for managing the entire correspondence with fronius."""
 
     landing_url = "https://www.solarweb.com/"
@@ -153,3 +153,28 @@ class FroniusSession:
 
         # TODO Add handling of case that chart_resp doesn't contain json.
         return chart_resp.json()
+
+
+class FroniusSession:
+    """
+    Singleton wrapper around the Fronius session to always have a single, pre-config'd
+    session.
+    """
+
+    _session = None
+
+    @classmethod
+    def get_session(cls):
+        """
+        Getter for the single session object.
+        """
+        if cls._session is None:
+            secrets = get_fronius_secrets()
+
+            cls._session = _FroniusSession(
+                user=secrets["username"],
+                password=secrets["password"],
+                fronius_id=secrets["fronius-id"],
+            )
+
+        return cls._session
