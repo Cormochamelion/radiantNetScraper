@@ -20,9 +20,6 @@ from radiant_net_scraper.database import Database
 
 LOGGER = get_configured_logger(__name__)
 
-# Disallow in-place modification of dataframes.
-pd.options.mode.copy_on_write = True
-
 
 class OutputDataFrames(NamedTuple):
     """
