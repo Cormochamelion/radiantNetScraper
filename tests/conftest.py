@@ -6,7 +6,7 @@ from test_infra.common_test_infra import arbitrary_json_test_file
 
 
 @fixture
-def arbitrary_file_dummy_fronius_session(monkeypatch) -> FroniusSession:
+def arbitrary_file_dummy_fronius_session(monkeypatch) -> None:
     """
     Monkeypatch FroniusSession to not do any requests, and just return the
     contents of an arbitrary test JSON file when asked for a chart.
@@ -23,3 +23,5 @@ def arbitrary_file_dummy_fronius_session(monkeypatch) -> FroniusSession:
     monkeypatch.setattr(
         FroniusSession, "get_chart", lambda *args, **kwargs: source_json_data
     )
+
+    return None
