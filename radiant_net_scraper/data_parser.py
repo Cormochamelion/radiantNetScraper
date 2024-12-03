@@ -136,9 +136,9 @@ def load_daily_usage_json(filepath: str) -> dict:
 
 def agg_daily_df(
     daily_df: pd.DataFrame,
-    sum_cols: list[str],
-    avg_cols: list[str],
-    time_cols: list[str],
+    sum_cols: tuple[str, ...],
+    avg_cols: tuple[str, ...],
+    time_cols: tuple[str, ...],
 ) -> pd.DataFrame:
     """
     Sum all the usage / production data inside a daily  df.
@@ -147,12 +147,15 @@ def agg_daily_df(
     sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
     avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
 
-    time_cols = list(time_cols)
+    # To group this needs to be a list.
+    time_col_list = list(time_cols)
 
-    sum_df = daily_df[sum_select_cols].groupby(time_cols).agg("sum").add_prefix("sum_")
+    sum_df = (
+        daily_df[sum_select_cols].groupby(time_col_list).agg("sum").add_prefix("sum_")
+    )
     avg_df = (
         daily_df[avg_select_cols]
-        .groupby(time_cols)
+        .groupby(time_col_list)
         .aggregate("mean")
         .add_prefix("mean_")
     )
@@ -191,7 +194,7 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
         "FromGenToWattPilot",
         "ToConsumer",
     )
-    avg_cols = "StateOfCharge"
+    avg_cols = tuple(["StateOfCharge"])
     time_cols = ("year", "month", "day")
 
     agg_df = agg_daily_df(
