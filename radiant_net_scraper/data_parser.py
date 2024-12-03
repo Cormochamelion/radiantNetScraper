@@ -11,23 +11,15 @@ import json
 import re
 
 from functools import reduce
-from typing import NamedTuple, Iterable
+from typing import Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
 
 from radiant_net_scraper.config import get_chosen_data_path, get_configured_logger
 from radiant_net_scraper.database import Database
+from radiant_net_scraper.types import OutputDataFrames
 
 LOGGER = get_configured_logger(__name__)
-
-
-class OutputDataFrames(NamedTuple):
-    """
-    Named tuple to keep a days data grouped together.
-    """
-
-    raw: pd.DataFrame
-    aggregated: pd.DataFrame
 
 
 @Pipe
