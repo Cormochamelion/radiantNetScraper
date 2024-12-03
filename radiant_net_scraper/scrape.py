@@ -16,7 +16,7 @@ from radiant_net_scraper.fronius_session import FroniusSession
 LOGGER = get_configured_logger(__name__)
 
 
-def scrape_daily_data(secrets: dict, date: dt.date) -> str:
+def scrape_daily_data(secrets: dict, *get_chart_args, **get_chart_kwars) -> str:
     """
     Use a login session to obtain the daily data chart for a given date as a serialized
     JSON dict.
@@ -27,7 +27,7 @@ def scrape_daily_data(secrets: dict, date: dt.date) -> str:
         fronius_id=secrets["fronius-id"],
     )
 
-    return json.dumps(fsession.get_chart(date=date))
+    return json.dumps(fsession.get_chart(*get_chart_args, **get_chart_kwars))
 
 
 def get_fronius_secrets() -> dict:
