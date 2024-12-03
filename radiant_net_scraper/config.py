@@ -5,6 +5,8 @@ construct a config object.
 
 import configparser as cfp
 import logging
+import pandas as pd
+
 
 from importlib.metadata import metadata
 from importlib.resources import files
@@ -12,6 +14,10 @@ from json import load, dumps
 from os import environ, makedirs
 from os.path import exists
 from platformdirs import site_config_dir, user_config_dir, site_data_dir, user_data_dir
+
+
+# Disallow in-place modification of dataframes.
+pd.options.mode.copy_on_write = True
 
 
 def get_config_paths(config_file_name: str = "config.json") -> dict[str, str]:
