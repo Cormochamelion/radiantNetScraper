@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from radiant_net_scraper.data_parser import parse_json_data_from_file_list
+from radiant_net_scraper.data_parser import parse_json_data_from_file_pair_list
 from radiant_net_scraper.scrape import run_scraper
 
 
@@ -20,8 +20,8 @@ def ingest_day(
     scraping_kwargs = scraping_kwargs or {}
     parsing_kwargs = parsing_kwargs or {}
 
-    output_file = run_scraper(**scraping_kwargs)
-    parse_json_data_from_file_list([output_file], **parsing_kwargs)
+    output_files = run_scraper(**scraping_kwargs)
+    parse_json_data_from_file_pair_list([output_files], **parsing_kwargs)
 
 
 def run_ingestion_continuously() -> None:

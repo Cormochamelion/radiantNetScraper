@@ -162,7 +162,7 @@ class _FroniusSession:
             "view": view,
         }
 
-    def get_chart(self, date, chart_type: str = "production"):
+    def get_chart(self, date, chart_type: str = "production") -> dict:
         """
         Retrieve the daily generation & usage chart from fronius. See `chart_data` for
         values of `chart_type`.

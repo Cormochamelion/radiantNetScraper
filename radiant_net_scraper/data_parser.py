@@ -212,7 +212,7 @@ def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database
     db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
-def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
+def parse_json_data_from_file_pair_list(infiles: list[dict], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLite DB.
     """
@@ -238,4 +238,4 @@ def parse_json_data(input_dir: str = "./", **kwargs):
 
     LOGGER.debug("Files to be ingested: %s", infilepaths)
 
-    parse_json_data_from_file_list(infilepaths, **kwargs)
+    parse_json_data_from_file_pair_list(infilepaths, **kwargs)

@@ -13,7 +13,7 @@ from radiant_net_scraper.data_parser import series_data_to_df, timestamp_to_posi
 
 DATE_FORMAT = r"%d.%m.%Y"
 # Conversion factor for seconds to the fronius timestamp.
-TIMESTAMP_SECONDS_FACTOR = 1000
+TIMESTAMP_SECONDS_FACTOR: int = 1000
 
 
 def random_date(
