@@ -40,7 +40,7 @@ class Database:
         db_cursor: sqlite3.Cursor,
         table_name: str,
         column_dict: dict[str, str],
-        constraints: str,
+        constraints: list[str],
     ) -> None:
         """
         Create a SQLite table from parameters.
