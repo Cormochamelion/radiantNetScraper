@@ -99,7 +99,7 @@ class FroniusSession:
         }
 
         try:
-            for key in login_params.keys():
+            for key in login_params:
                 login_params[key] = login_soup.find("input", {"name": key}).get("value")
 
         except AttributeError as e:
