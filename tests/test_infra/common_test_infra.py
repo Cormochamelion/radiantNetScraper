@@ -29,7 +29,7 @@ def check_db(expected_db_path: str, expect_rows: bool = True) -> None:
             assert table_n_entry > 0
 
 
-def json_test_file_dir() -> list[str]:
+def json_test_file_dir() -> str:
     """
     Provide the path of the test data dir.
     """
