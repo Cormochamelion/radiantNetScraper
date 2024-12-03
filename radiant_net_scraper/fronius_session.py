@@ -25,12 +25,37 @@ class _FroniusSession:
         self.session = rq.Session()
         self.key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
         self.session_key = None
-        self.is_logged_in = False
         self.secret = {"username": user, "password": password, "id": fronius_id}
 
         LOGGER.info("Logging into Fronius Solarweb at %s...", self.landing_url)
         self.login()
         LOGGER.info("... done logging in.")
+
+    def is_logged_in(self) -> bool:
+        """
+        Check whether the session is logged in by requesting the landing page.
+        When the request is redirected to the page of the personal PV system, everything
+        is fine.
+        """
+        landig_page_resp = self.session.get(url=self.landing_url)
+
+        landig_page_resp.raise_for_status()
+
+        if len(landig_page_resp.history) < 2:
+            # We didn't get forwarded to the PV page.
+            return False
+
+        try:
+            query = ulparse.urlparse(landig_page_resp.url).query
+            page_pv = query.split("=")[1]
+
+        except Exception as e:
+            raise ValueError(
+                f"Can't parse out PV system ID from URL {landig_page_resp.url}. "
+                "Something may have gone wrong with the login."
+            ) from e
+
+        return page_pv == self.secret["id"]
 
     def login(self):
         """Get all necessary data and cookies to perform all operations."""
@@ -115,9 +140,13 @@ class _FroniusSession:
         # We only care about getting the cookies.
         _ = self.session.post(url=callback_url, data=login_params)
 
-        # FIXME Make this independent from the login fun, i.e. check if all
-        # prerequisites are true.
-        self.is_logged_in = True
+        if self.is_logged_in():
+            LOGGER.info("Login successfull!")
+        else:
+            raise ValueError(
+                "Something went wrong during the last phase of the login. "
+                "Has something changed at Solarweb?"
+            )
 
     def chart_data(self, fronius_id, date, view: str = "production") -> dict:
         """
