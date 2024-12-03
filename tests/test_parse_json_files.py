@@ -20,7 +20,11 @@ class TestParseJsonDataFromFileList:
 
         check_db(expected_db_path)
 
-    @parametrize("file", json_test_files(), ids=os.path.basename)
+    @parametrize(
+        "file",
+        json_test_files(),
+        ids=os.path.basename,
+    )
     def test_files(self, tmp_path, file):
         """
         Test each file individually, mainly if ingestion runs without issues.
