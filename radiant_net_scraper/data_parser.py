@@ -23,8 +23,6 @@ LOGGER = get_configured_logger(__name__)
 # Disallow in-place modification of dataframes.
 pd.options.mode.copy_on_write = True
 
-# TODO Add option to add to database right after retrieving a json file.
-
 
 class OutputDataFrames(NamedTuple):
     """
