@@ -122,7 +122,9 @@ def anonymize_data_json(
     )
 
     # Difference on the scale of the timestamp between actual and fictional date.
-    date_diff = (time_start - actual_date).total_seconds() * TIMESTAMP_SECONDS_FACTOR
+    date_diff = (
+        int((time_start - actual_date).total_seconds()) * TIMESTAMP_SECONDS_FACTOR
+    )
 
     anonymize_series_data(anon_dict["settings"]["series"], date_diff)
 
