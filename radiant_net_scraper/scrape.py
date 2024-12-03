@@ -22,7 +22,9 @@ def scrape_daily_data(secrets: dict, date: dt.date) -> dict:
     JSON dict.
     """
     fsession = FroniusSession(
-        user=secrets["username"], password=secrets["password"], id=secrets["fronius-id"]
+        user=secrets["username"],
+        password=secrets["password"],
+        fronius_id=secrets["fronius-id"],
     )
 
     return json.dumps(fsession.get_chart(date=date))

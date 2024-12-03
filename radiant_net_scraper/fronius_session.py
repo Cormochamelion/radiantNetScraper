@@ -21,12 +21,12 @@ class FroniusSession:
     chart_url = "https://www.solarweb.com/Chart/GetChartNew"
     key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
 
-    def __init__(self, user, password, id):
+    def __init__(self, user, password, fronius_id):
         self.session = rq.Session()
         self.key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
         self.session_key = None
         self.is_logged_in = False
-        self.secret = {"username": user, "password": password, "id": id}
+        self.secret = {"username": user, "password": password, "id": fronius_id}
 
         LOGGER.info("Logging into Fronius Solarweb at %s...", self.landing_url)
         self.login()
