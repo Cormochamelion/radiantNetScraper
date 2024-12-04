@@ -1,4 +1,6 @@
 import pandas as pd
+
+from dataclasses import dataclass
 from typing import NamedTuple
 
 
@@ -14,3 +16,12 @@ class OutputDataFrames(NamedTuple):
 # FIXME Declare in greater detail what makes a chart.
 Chart = dict
 
+
+@dataclass
+class ChartGroup:
+    """
+    Bundle different types of chart together.
+    """
+
+    production: Chart
+    consumption: Chart | None
