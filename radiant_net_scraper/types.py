@@ -13,6 +13,16 @@ class OutputDataFrames(NamedTuple):
     aggregated: pd.DataFrame
 
 
+@dataclass
+class ChartFileGroup:
+    """
+    Bundle different types of chart files together.
+    """
+
+    production: str
+    consumption: str | None
+
+
 # FIXME Declare in greater detail what makes a chart.
 Chart = dict
 
