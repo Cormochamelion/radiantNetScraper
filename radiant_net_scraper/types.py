@@ -9,3 +9,8 @@ class OutputDataFrames(NamedTuple):
 
     raw: pd.DataFrame
     aggregated: pd.DataFrame
+
+
+# FIXME Declare in greater detail what makes a chart.
+Chart = dict
+
