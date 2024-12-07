@@ -38,6 +38,21 @@ def json_test_file_dir() -> str:
     return f"{os.getcwd()}/tests/test_data"
 
 
+def json_test_files() -> list[tuple[str, ...]]:
+    """
+    Provide a list of json test files date from the test data dir.
+    """
+    return sorted(glob.glob(f"{json_test_file_dir()}/*.json"))
+
+
+def arbitrary_json_test_file() -> tuple[str, ...]:
+    """
+    Provide the paths to the JSON test files of an arbitrary group of generation and
+    usage files.
+    """
+    return json_test_files()[0]
+
+
 def json_test_file_groups() -> list[tuple[str, ...]]:
     """
     Provide a list of groups of json test files belonging to one date from the test

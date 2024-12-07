@@ -1,6 +1,6 @@
 import sys
 
-from test_infra.common_test_infra import json_test_file_dir, json_test_file_groups
+from test_infra.common_test_infra import json_test_file_dir, json_test_files
 
 from radiant_net_scraper import scripts
 
@@ -37,7 +37,7 @@ class TestParseJsonFiles:
         args = [
             "TESTING",
             "--input-files",
-            *json_test_file_groups(),
+            *json_test_files(),
             "--output-db",
             db_path,
         ]
