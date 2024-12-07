@@ -181,7 +181,7 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
         "FromGenToWattPilot",
         "ToConsumer",
     )
-    avg_cols = tuple("StateOfCharge")
+    avg_cols = tuple(["StateOfCharge"])
     time_cols = ("year", "month", "day")
 
     agg_df = agg_daily_df(
