@@ -6,18 +6,20 @@ database.
 import datetime as dt
 import numpy as np
 import pandas as pd
+import glob
 import json
 import os
 import re
 
 from functools import reduce
+from itertools import groupby
 from typing import Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
 
 from radiant_net_scraper.config import get_chosen_data_path, get_configured_logger
 from radiant_net_scraper.database import Database
-from radiant_net_scraper.types import OutputDataFrames
+from radiant_net_scraper.types import ChartFileGroup, OutputDataFrames
 
 LOGGER = get_configured_logger(__name__)
 
@@ -130,6 +132,7 @@ def agg_daily_df(
     """
     Sum all the usage / production data inside a daily  df.
     """
+    # TODO Don't sum but calculate kWh.
     present_cols = set(daily_df.columns.values)
     sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
     avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
@@ -174,14 +177,16 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     """
     daily_df = parse_usage_json(json_dict)
 
-    sum_cols = (
-        "FromGenToBatt",
-        "FromGenToGrid",
-        "FromGenToConsumer",
-        "FromGenToWattPilot",
-        "ToConsumer",
-    )
+    sum_col_re = re.compile(r"^[A-Z]")
+
     avg_cols = tuple(["StateOfCharge"])
+
+    sum_cols = [
+        col
+        for col in daily_df
+        if re.search(sum_col_re, col) is not None and col not in avg_cols
+    ]
+
     time_cols = ("year", "month", "day")
 
     agg_df = agg_daily_df(
@@ -199,7 +204,7 @@ def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database
     db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
-def parse_json_data_from_file_pair_list(infiles: list[dict], **kwargs) -> None:
+def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLite DB.
     """
@@ -221,8 +226,8 @@ def parse_json_data(input_dir: str = "./", **kwargs):
     Parse all the json files in `input_dir` into a sqlite DB.
     """
     LOGGER.info("Finding files to ingest in %s...", input_dir)
-    infilepaths = get_json_list(input_dir)
+    infilepaths = get_json_groups(input_dir)
 
     LOGGER.debug("Files to be ingested: %s", infilepaths)
 
-    parse_json_data_from_file_pair_list(infilepaths, **kwargs)
+    parse_json_data_from_file_list(infilepaths, **kwargs)

@@ -20,7 +20,7 @@ class ChartFileGroup:
     """
 
     production: str
-    consumption: str | None
+    consumption: str | None = None
 
 
 # FIXME Declare in greater detail what makes a chart.
