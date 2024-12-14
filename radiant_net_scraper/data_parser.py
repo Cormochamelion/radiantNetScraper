@@ -6,8 +6,8 @@ database.
 import datetime as dt
 import numpy as np
 import pandas as pd
+import glob
 import json
-import os
 import re
 
 from functools import reduce
@@ -162,22 +162,11 @@ def agg_daily_df(
     return pd.concat([sum_df, avg_df], axis=1).reset_index()
 
 
-def is_daily_json_file(path: str) -> bool:
-    """
-    Check if a path points to a downloaded JSON file from the filename alone.
-    """
-    daily_json_re = re.compile(r"^[0-9]{8}\.json$")
-    basename = os.path.basename(path)
-
-    return os.path.isfile(path) and re.match(daily_json_re, basename) is not None
-
-
 def get_json_list(input_dir: str) -> list[str]:
     """
     Find all the downloaded json files in a given dir and return them as a list.
     """
-    paths = [os.path.join(input_dir, path) for path in os.listdir(input_dir)]
-    return [*filter(is_daily_json_file, paths)]
+    return glob.glob(f"{input_dir}/*.json")
 
 
 def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
