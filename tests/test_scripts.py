@@ -1,6 +1,6 @@
 import sys
 
-from test_infra.common_test_infra import json_test_file_dir, json_test_files
+from test_infra.common_test_infra import check_db, json_test_file_dir, json_test_files
 
 from radiant_net_scraper import scripts
 
@@ -29,6 +29,8 @@ class TestParseJsonFiles:
 
         scripts.parse_json_files()
 
+        check_db(db_path)
+
     def test_file_list_input(self, monkeypatch, tmp_path):
         """
         Test that basic ingestion of the test JSON files works.
@@ -39,3 +41,5 @@ class TestParseJsonFiles:
         monkeypatch.setattr(sys, "argv", args)
 
         scripts.parse_json_files()
+
+        check_db(db_path)
