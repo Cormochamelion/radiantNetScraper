@@ -61,11 +61,14 @@ class Database:
 
         column_dict = {
             "ToConsumer": "REAL",
+            "FromGen": "REAL",
             "FromGenToBatt": "REAL",
             "FromGenToGrid": "REAL",
             "FromGenToConsumer": "REAL",
             "FromGenToSomewhere": "REAL",
             "FromGenToWattPilot": "REAL",
+            "FromBattToConsumer": "REAL",
+            "FromGridToConsumer": "REAL",
             "StateOfCharge": "REAL",
             "EmergencyPower": "",
             "time": "INTEGER NOT NULL UNIQUE",
@@ -88,11 +91,14 @@ class Database:
 
         column_dict = {
             "sum_ToConsumer": "REAL",
+            "sum_FromGen": "REAL",
             "sum_FromGenToBatt": "REAL",
             "sum_FromGenToGrid": "REAL",
             "sum_FromGenToConsumer": "REAL",
             "sum_FromGenToSomewhere": "REAL",
             "sum_FromGenToWattPilot": "REAL",
+            "sum_FromBattToConsumer": "REAL",
+            "sum_FromGridToConsumer": "REAL",
             "sum_EmergencyPower": "",
             "mean_StateOfCharge": "REAL",
             "year": "INTEGER NOT NULL",
