@@ -116,18 +116,22 @@ def anonymize_data_json(
     with open(infile, "r", encoding="UTF-8") as input:
         json_dict = json.load(input)
 
-    actual_date = datetime.datetime.strptime(json_dict["title"], DATE_FORMAT)
+    actual_date = datetime.datetime.strptime(
+        json_dict["title"], DATE_FORMAT
+    ).astimezone()
 
     anon_dict = deepcopy(json_dict)
 
     anon_dict["title"] = spoofed_date.strftime(DATE_FORMAT)
 
     time_start = datetime.datetime(
-        spoofed_date.year, spoofed_date.month, spoofed_date.day
-    )
+        spoofed_date.year,
+        spoofed_date.month,
+        spoofed_date.day,
+    ).astimezone()
     time_stop = datetime.datetime(
         spoofed_date.year, spoofed_date.month, spoofed_date.day, 23, 55
-    )
+    ).astimezone()
 
     anon_dict["settings"]["xAxis"]["max"] = (
         time_stop.timestamp() * TIMESTAMP_SECONDS_FACTOR
