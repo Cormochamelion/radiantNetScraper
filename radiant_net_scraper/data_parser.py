@@ -31,6 +31,14 @@ def filter_by(x: Iterable, flags: Iterable[bool]) -> Iterable:
     return zip(x, flags) | where(lambda x: x[1]) | pmap(lambda x: x[0])
 
 
+@Pipe
+def run_pipe(x: Iterable) -> None:
+    """
+    Run a pipe for its side effects, discard output.
+    """
+    list(x)
+
+
 def json_is_paywalled(usage_json: dict) -> bool:
     """
     Check if a downloaded JSON files is paywalled. If not, it should contain the data
@@ -201,12 +209,13 @@ def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
         kwargs["db_path"] = get_chosen_data_path()
     db_handler = Database(**kwargs)
 
-    list(
+    _ = (
         infiles
         | pmap(load_daily_usage_json)
         | where(lambda x: not json_is_paywalled(x))
         | pmap(process_daily_usage_dict)
         | pmap(lambda x: save_usage_dataframe_dict(x, db_handler))
+        | run_pipe()
     )
 
 
