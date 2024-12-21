@@ -1,4 +1,5 @@
 import os
+import pytest
 from pytest_cases import parametrize
 
 from test_infra.common_test_infra import check_db, json_test_files
@@ -7,6 +8,7 @@ from radiant_net_scraper import data_parser
 
 
 class TestParseJsonDataFromFileList:
+    @pytest.mark.filterwarnings("error")
     def test_success(self, tmp_path):
         """
         General test, check if all test files get read without error.
@@ -25,6 +27,7 @@ class TestParseJsonDataFromFileList:
         json_test_files(),
         ids=os.path.basename,
     )
+    @pytest.mark.filterwarnings("error")
     def test_files(self, tmp_path, file):
         """
         Test each file individually, mainly if ingestion runs without issues.
