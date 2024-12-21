@@ -60,13 +60,13 @@ class Database:
         table_name = "raw_data"
 
         column_dict = {
+            "ToConsumer": "REAL",
             "FromGenToBatt": "REAL",
             "FromGenToGrid": "REAL",
-            "ToConsumer": "REAL",
             "FromGenToConsumer": "REAL",
-            "StateOfCharge": "REAL",
             "FromGenToSomewhere": "REAL",
             "FromGenToWattPilot": "REAL",
+            "StateOfCharge": "REAL",
             "EmergencyPower": "",
             "time": "INTEGER NOT NULL UNIQUE",
             "year": "INTEGER NOT NULL",
@@ -87,9 +87,9 @@ class Database:
         table_name = "daily_aggregated"
 
         column_dict = {
+            "sum_ToConsumer": "REAL",
             "sum_FromGenToBatt": "REAL",
             "sum_FromGenToGrid": "REAL",
-            "sum_ToConsumer": "REAL",
             "sum_FromGenToConsumer": "REAL",
             "sum_FromGenToSomewhere": "REAL",
             "sum_FromGenToWattPilot": "REAL",
