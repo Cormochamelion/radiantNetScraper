@@ -177,14 +177,18 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     """
     daily_df = parse_usage_json(json_dict)
 
-    sum_cols = (
-        "FromGenToBatt",
-        "FromGenToGrid",
-        "FromGenToConsumer",
-        "FromGenToWattPilot",
-        "ToConsumer",
-    )
+    sum_col_re = re.compile(r"^[A-Z]")
+
     avg_cols = tuple(["StateOfCharge"])
+
+    sum_cols = tuple(
+        [
+            col
+            for col in daily_df.columns
+            if re.search(sum_col_re, col) is not None and col not in avg_cols
+        ]
+    )
+
     time_cols = ("year", "month", "day")
 
     agg_df = agg_daily_df(
