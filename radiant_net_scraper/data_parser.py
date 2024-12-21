@@ -143,6 +143,7 @@ def agg_daily_df(
     """
     Sum all the usage / production data inside a daily  df.
     """
+    # TODO Don't sum but calculate kWh.
     present_cols = set(daily_df.columns.values)
     sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
     avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
