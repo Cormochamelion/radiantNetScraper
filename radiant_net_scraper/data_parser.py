@@ -11,13 +11,14 @@ import json
 import re
 
 from functools import reduce
+from itertools import groupby
 from typing import Iterable
 from pipe import where, Pipe
 from pipe import map as pmap
 
 from radiant_net_scraper.config import get_chosen_data_path, get_configured_logger
 from radiant_net_scraper.database import Database
-from radiant_net_scraper.types import OutputDataFrames
+from radiant_net_scraper.types import ChartFileGroup, OutputDataFrames
 
 LOGGER = get_configured_logger(__name__)
 
@@ -163,6 +164,21 @@ def get_json_list(input_dir: str) -> list[str]:
     Find all the downloaded json files in a given dir and return them as a list.
     """
     return glob.glob(f"{input_dir}/*.json")
+
+
+def get_chart_file_groups(files: list[str]) -> list[ChartFileGroup]:
+    """
+    Figure out which files in a list belong to the same date, and return a list of file
+    groups.
+    """
+    group_replace_re = re.compile(r"(_consumption|_production)")
+
+    groupings = groupby(
+        sorted(files),
+        key=lambda file: re.sub(group_replace_re, "", file),
+    )
+
+    return [ChartFileGroup(*group) for _, group in groupings]
 
 
 def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
