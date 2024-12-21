@@ -10,6 +10,7 @@ from radiant_net_scraper.config import (
     get_configured_logger,
 )
 from radiant_net_scraper.fronius_session import FroniusSession
+from radiant_net_scraper.types import ChartFileGroup
 
 LOGGER = get_configured_logger(__name__)
 
@@ -43,7 +44,7 @@ def save_chart_to_file(
     return output_file
 
 
-def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> dict[str, str]:
+def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> ChartFileGroup:
     """
     Determine the date for which data should be retrieved and save the data for that
     date to disk.
@@ -55,11 +56,11 @@ def run_scraper(output_dir: str | None = None, days_ago: int = 1) -> dict[str, s
 
     chart_types = ("production", "consumption")
 
-    output_files = {
-        chart_type: save_chart_to_file(
-            date=date_to_parse, output_dir=output_dir, chart_type=chart_type
-        )
-        for chart_type in chart_types
-    }
-
-    return output_files
+    return ChartFileGroup(
+        *[
+            save_chart_to_file(
+                date=date_to_parse, output_dir=output_dir, chart_type=chart_type
+            )
+            for chart_type in chart_types
+        ]
+    )

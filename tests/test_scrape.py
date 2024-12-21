@@ -1,14 +1,16 @@
 import os
 import pytest
 
+from dataclasses import astuple
+
 from radiant_net_scraper import scrape
 
 
 class TestRunScraper:
     def test_success(self, arbitrary_file_dummy_fronius_session, tmpdir):
-        out_files = scrape.run_scraper(output_dir=f"{str(tmpdir)}/")
+        output_file_group = scrape.run_scraper(output_dir=f"{str(tmpdir)}/")
 
-        assert all(os.path.exists(out_file) for out_file in out_files.values())
+        assert all(os.path.exists(out_file) for out_file in astuple(output_file_group))
 
     @pytest.mark.requires_login
     def test_actual_retrieval(self, request, tmpdir):
@@ -18,6 +20,6 @@ class TestRunScraper:
                 "this is ok, select with `pytest -m requires_login`."
             )
 
-        out_files = scrape.run_scraper(output_dir=f"{str(tmpdir)}/")
+        output_file_group = scrape.run_scraper(output_dir=f"{str(tmpdir)}/")
 
-        assert all(os.path.exists(out_file) for out_file in out_files.values())
+        assert all(os.path.exists(out_file) for out_file in astuple(output_file_group))
