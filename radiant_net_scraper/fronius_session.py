@@ -133,7 +133,7 @@ class FroniusSession:
             "view": "production",
         }
 
-    def get_chart(self, date):
+    def get_chart(self, date) -> dict:
         """
         Retrieve the daily generation & usage chart from fronius.
         """
