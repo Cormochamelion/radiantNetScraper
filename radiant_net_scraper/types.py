@@ -39,3 +39,13 @@ class ChartGroup:
 
     production: Chart
     consumption: Chart | None = None
+
+
+@dataclass
+class ChartGroupData:
+    """
+    Bundle parsed data from a chart group.
+    """
+
+    production: OutputDataFrames
+    consumption: OutputDataFrames | None = None
