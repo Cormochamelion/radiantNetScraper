@@ -22,6 +22,7 @@ from radiant_net_scraper.database import Database
 from radiant_net_scraper.types import (
     ChartFileGroup,
     ChartGroup,
+    ChartGroupData,
     OutputDataFrames,
 )
 
@@ -234,6 +235,19 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     )
 
     return OutputDataFrames(raw=daily_df, aggregated=agg_df)
+
+
+def parse_chart_group_data(group: ChartGroup) -> ChartGroupData:
+    """
+    Parse data from chart group.
+    """
+    return ChartGroupData(
+        **{
+            name: process_daily_usage_dict(chart)
+            for name, chart in asdict(group).items()
+            if chart is not None
+        }
+    )
 
 
 def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database):
