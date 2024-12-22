@@ -10,7 +10,7 @@ import glob
 import json
 import re
 
-from dataclasses import asdict
+from dataclasses import asdict, astuple
 from functools import reduce
 from itertools import groupby
 from typing import Iterable
@@ -51,6 +51,15 @@ def json_is_paywalled(usage_json: dict) -> bool:
     we are after.
     """
     return usage_json["isPremiumFeature"]
+
+
+def group_is_paywalled(group: ChartGroup) -> bool:
+    """
+    Check if any of the charts in a group is paywalled.
+    """
+    return any(
+        json_is_paywalled(chart) for chart in astuple(group) if chart is not None
+    )
 
 
 def timestamp_to_posix(timestamp) -> int:
