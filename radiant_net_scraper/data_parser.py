@@ -302,18 +302,7 @@ def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLite DB.
     """
-    if "db_path" not in kwargs:
-        kwargs["db_path"] = get_chosen_data_path()
-    db_handler = Database(**kwargs)
-
-    _ = (
-        infiles
-        | pmap(load_daily_usage_json)
-        | where(lambda x: not json_is_paywalled(x))
-        | pmap(process_daily_usage_dict)
-        | pmap(lambda x: save_usage_dataframe_dict(x, db_handler))
-        | run_pipe()
-    )
+    parse_json_data_from_file_pair_list(get_chart_file_groups(infiles), **kwargs)
 
 
 def parse_json_data(input_dir: str = "./", **kwargs):
