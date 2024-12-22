@@ -10,6 +10,7 @@ import glob
 import json
 import re
 
+from dataclasses import asdict
 from functools import reduce
 from itertools import groupby
 from typing import Iterable
@@ -18,7 +19,11 @@ from pipe import map as pmap
 
 from radiant_net_scraper.config import get_chosen_data_path, get_configured_logger
 from radiant_net_scraper.database import Database
-from radiant_net_scraper.types import ChartFileGroup, OutputDataFrames
+from radiant_net_scraper.types import (
+    ChartFileGroup,
+    ChartGroup,
+    OutputDataFrames,
+)
 
 LOGGER = get_configured_logger(__name__)
 
@@ -128,6 +133,19 @@ def load_daily_usage_json(filepath: str) -> dict:
     LOGGER.debug("Loading file at %s...", filepath)
     with open(filepath, encoding="UTF-8") as infile:
         return json.load(infile)
+
+
+def load_chart_group(group: ChartFileGroup) -> ChartGroup:
+    """
+    Load the files from a ChartFileGroup into a ChartGroup.
+    """
+    return ChartGroup(
+        **{
+            name: load_daily_usage_json(file)
+            for name, file in asdict(group).items()
+            if file is not None
+        }
+    )
 
 
 def agg_daily_df(
