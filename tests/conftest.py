@@ -1,3 +1,7 @@
+"""
+Fixtures shared across all tests.
+"""
+
 from json import load
 import os
 from pytest_cases import fixture
