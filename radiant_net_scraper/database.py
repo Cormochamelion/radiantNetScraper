@@ -118,11 +118,14 @@ class Database:
             df.to_sql(table_name, self.db_conn, if_exists="append", index=False)
         except sqlite3.IntegrityError as e:
             if "UNIQUE constraint failed" in str(e):
-                LOGGER.warning(
+                warning = (
                     "Failed to insert data, some or all rows already have their "
-                    "primary key present in the DB. Error: %s",
-                    e,
+                    f"primary key present in the DB. Error: {e}"
                 )
+
+                LOGGER.warning(warning)
+
+                raise Warning(warning) from e
 
             else:
                 raise e
