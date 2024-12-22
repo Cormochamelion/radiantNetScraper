@@ -1,8 +1,11 @@
 from itertools import groupby
+from dataclasses import astuple
 import glob
 import os
 import re
 import sqlite3
+
+from radiant_net_scraper.types import ChartFileGroup
 
 
 TABLE_QUERY = "select name from sqlite_master where type = 'table';"
@@ -53,7 +56,7 @@ def arbitrary_json_test_file() -> str:
     return json_test_files()[0]
 
 
-def json_test_file_groups() -> list[tuple[str, ...]]:
+def json_test_file_groups() -> list[ChartFileGroup]:
     """
     Provide a list of groups of json test files belonging to one date from the test
     data dir.
@@ -67,16 +70,16 @@ def json_test_file_groups() -> list[tuple[str, ...]]:
         key=lambda file: re.sub(group_replace_re, "", file),
     )
 
-    return [tuple([*group]) for _, group in groupings]
+    return [ChartFileGroup(*group) for _, group in groupings]
 
 
-def arbitrary_json_test_group() -> tuple[str, ...]:
+def arbitrary_json_test_group() -> ChartFileGroup | None:
     """
     Provide the paths to the JSON test files of an arbitrary group of generation and
     usage files.
     """
     for group in json_test_file_groups():
-        if len(group) >= 2:
+        if not any(file is None for file in astuple(group)):
             return group
 
-    return tuple()
+    return None
