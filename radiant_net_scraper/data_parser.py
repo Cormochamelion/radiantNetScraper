@@ -309,9 +309,9 @@ def parse_json_data(input_dir: str = "./", **kwargs):
     """
     Parse all the json files in `input_dir` into a sqlite DB.
     """
-    LOGGER.info("Finding files to ingest in %s...", input_dir)
-    infilepaths = get_json_list(input_dir)
+    LOGGER.info("Finding file groups to ingest in %s...", input_dir)
+    file_groups = get_chart_file_groups(get_json_list(input_dir))
 
-    LOGGER.debug("Files to be ingested: %s", infilepaths)
+    LOGGER.debug("Groups to be ingested: %s", file_groups)
 
-    parse_json_data_from_file_list(infilepaths, **kwargs)
+    parse_json_data_from_file_pair_list(file_groups, **kwargs)
