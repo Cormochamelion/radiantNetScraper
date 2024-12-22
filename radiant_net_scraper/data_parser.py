@@ -258,6 +258,26 @@ def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database
     db_handler.insert_daily_agg_df(output_dfs.aggregated)
 
 
+def merge_chart_data(
+    dfs_a: OutputDataFrames, dfs_b: OutputDataFrames
+) -> OutputDataFrames:
+    """
+    Merge two sets of output data by merging their respective data frames.
+    """
+    return OutputDataFrames(*[pd.merge(df_a, df_b) for df_a, df_b in zip(dfs_a, dfs_b)])
+
+
+def save_chart_data(group: ChartGroupData, *args, **kwargs) -> None:
+    """
+    Merge the parsed data of a group and insert it into the DB.
+    """
+    group_data_filtered = [data for data in astuple(group) if data]
+
+    merged_data = reduce(merge_chart_data, group_data_filtered)
+
+    save_usage_dataframe_dict(merged_data, *args, **kwargs)
+
+
 def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLite DB.
