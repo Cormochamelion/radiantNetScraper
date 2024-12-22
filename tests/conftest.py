@@ -2,6 +2,7 @@
 Fixtures shared across all tests.
 """
 
+from dataclasses import astuple
 from json import load
 import os
 from pytest_cases import fixture
@@ -25,7 +26,14 @@ def arbitrary_file_dummy_fronius_session(monkeypatch) -> None:
     arbitrary_chart_pair = {}
     chart_type_re = re.compile(r"_(consumption|production).json")
 
-    for infile in arbitrary_json_test_group():
+    test_group = arbitrary_json_test_group()
+
+    if not test_group:
+        raise ValueError(
+            "Couldn't retrieve a group of test files. Did something change with them?"
+        )
+
+    for infile in astuple(test_group):
         chart_type_match = re.search(chart_type_re, os.path.basename(infile))
 
         if not chart_type_match:
