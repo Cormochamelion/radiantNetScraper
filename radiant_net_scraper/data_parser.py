@@ -278,6 +278,26 @@ def save_chart_data(group: ChartGroupData, *args, **kwargs) -> None:
     save_usage_dataframe_dict(merged_data, *args, **kwargs)
 
 
+def parse_json_data_from_file_pair_list(
+    infile_groups: list[ChartFileGroup], **kwargs
+) -> None:
+    """
+    Parse a list of JSON file groups into the SQLite DB.
+    """
+    if "db_path" not in kwargs:
+        kwargs["db_path"] = get_chosen_data_path()
+    db_handler = Database(**kwargs)
+
+    _ = (
+        infile_groups
+        | pmap(load_chart_group)
+        | where(lambda x: not group_is_paywalled(x))
+        | pmap(parse_chart_group_data)
+        | pmap(lambda x: save_chart_data(x, db_handler))
+        | run_pipe()
+    )
+
+
 def parse_json_data_from_file_list(infiles: list[str], **kwargs) -> None:
     """
     Parse a list of JSON files into the SQLite DB.
