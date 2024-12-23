@@ -158,6 +158,33 @@ def load_chart_group(group: ChartFileGroup) -> ChartGroup:
     )
 
 
+def calculate_col_kwh(raw_df=pd.DataFrame, agg_cols=list[str]) -> float:
+    """
+    Calulate the work in kWh on each time step for a set of columns.
+    """
+    indexer = pd.api.indexers.FixedForwardWindowIndexer(window_size=2)
+
+    raw_df["time_step"] = (
+        raw_df["time"]
+        .rolling(window=indexer)
+        .apply(
+            lambda sub_series: timestamp_to_posix(sub_series.iloc[1])
+            - timestamp_to_posix(sub_series.iloc[0])
+        )
+        # I'm assuming the last value is the same as the previous one. This is a
+        # compromise between assuming all values are the same and saying it's impossible
+        # to know the last value.
+        .ffill()
+        # Convert seconds to hours.
+        .apply(lambda seconds: seconds / (60**2))
+    )
+
+    for col_name in agg_cols:
+        raw_df[col_name] = (raw_df["time_step"] * raw_df[col_name]) / 1e3
+
+    return raw_df
+
+
 def agg_daily_df(
     daily_df: pd.DataFrame,
     sum_cols: tuple[str, ...],
