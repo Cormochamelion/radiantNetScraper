@@ -306,13 +306,20 @@ def parse_chart_group_data(group: ChartGroup) -> ChartGroupData:
     """
     Parse data from chart group.
     """
-    return ChartGroupData(
+    chart_data = ChartGroupData(
         **{
             name: process_daily_usage_dict(chart)
             for name, chart in asdict(group).items()
             if chart is not None
         }
     )
+
+    if chart_data.consumption is None:
+        chart_data.consumption = interpolate_consumption_from_production(
+            chart_data.production
+        )
+
+    return chart_data
 
 
 def save_usage_dataframe_dict(output_dfs: OutputDataFrames, db_handler: Database):
