@@ -187,23 +187,26 @@ def calculate_col_kwh(raw_df=pd.DataFrame, agg_cols=list[str]) -> float:
 
 def agg_daily_df(
     daily_df: pd.DataFrame,
-    sum_cols: tuple[str, ...],
+    kwh_cols: tuple[str, ...],
     avg_cols: tuple[str, ...],
     time_cols: tuple[str, ...],
 ) -> pd.DataFrame:
     """
     Sum all the usage / production data inside a daily  df.
     """
-    # TODO Don't sum but calculate kWh.
     present_cols = set(daily_df.columns.values)
-    sum_select_cols = [*(set(time_cols) | set(sum_cols)) & present_cols]
+    kwh_select_cols = [*(set(time_cols) | set(kwh_cols)) & present_cols]
     avg_select_cols = [*(set(time_cols) | set(avg_cols)) & present_cols]
 
     # To group this needs to be a list.
     time_col_list = list(time_cols)
 
-    sum_df = (
-        daily_df[sum_select_cols].groupby(time_col_list).agg("sum").add_prefix("sum_")
+    kwh_raw_df = calculate_col_kwh(
+        daily_df[[*(set(["time"]) | set(kwh_select_cols))]], kwh_cols
+    )
+
+    kwh_df = (
+        kwh_raw_df[kwh_select_cols].groupby(time_col_list).agg("sum").add_prefix("kwh_")
     )
     avg_df = (
         daily_df[avg_select_cols]
@@ -211,7 +214,7 @@ def agg_daily_df(
         .aggregate("mean")
         .add_prefix("mean_")
     )
-    return pd.concat([sum_df, avg_df], axis=1).reset_index()
+    return pd.concat([kwh_df, avg_df], axis=1).reset_index()
 
 
 def get_json_list(input_dir: str) -> list[str]:
@@ -243,22 +246,22 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     """
     daily_df = parse_usage_json(json_dict)
 
-    sum_col_re = re.compile(r"^[A-Z]")
+    kwh_col_re = re.compile(r"^[A-Z]")
 
     avg_cols = tuple(["StateOfCharge"])
 
-    sum_cols = tuple(
+    kwh_cols = tuple(
         [
             col
             for col in daily_df.columns
-            if re.search(sum_col_re, col) is not None and col not in avg_cols
+            if re.search(kwh_col_re, col) is not None and col not in avg_cols
         ]
     )
 
     time_cols = ("year", "month", "day")
 
     agg_df = agg_daily_df(
-        daily_df, time_cols=time_cols, avg_cols=avg_cols, sum_cols=sum_cols
+        daily_df, time_cols=time_cols, avg_cols=avg_cols, kwh_cols=kwh_cols
     )
 
     return OutputDataFrames(raw=daily_df, aggregated=agg_df)
