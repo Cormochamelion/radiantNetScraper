@@ -239,13 +239,10 @@ def get_chart_file_groups(files: list[str]) -> list[ChartFileGroup]:
     return [ChartFileGroup(*group) for _, group in groupings]
 
 
-def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
+def summarize_daily_df(daily_df: pd.DataFrame) -> pd.DataFrame:
     """
-    Process a json dict of daily usage data into a dataframe, and return it alongside
-    a dataframe of the data aggregated over the whole day.
+    Summarize a daily production / usage df by computing total work & avg battery soc.
     """
-    daily_df = parse_usage_json(json_dict)
-
     kwh_col_re = re.compile(r"^[A-Z]")
 
     avg_cols = tuple(["StateOfCharge"])
@@ -260,11 +257,19 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
 
     time_cols = ("year", "month", "day")
 
-    agg_df = agg_daily_df(
+    return agg_daily_df(
         daily_df, time_cols=time_cols, avg_cols=avg_cols, kwh_cols=kwh_cols
     )
 
-    return OutputDataFrames(raw=daily_df, aggregated=agg_df)
+
+def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
+    """
+    Process a json dict of daily usage data into a dataframe, and return it alongside
+    a dataframe of the data aggregated over the whole day.
+    """
+    daily_df = parse_usage_json(json_dict)
+
+    return OutputDataFrames(raw=daily_df, aggregated=summarize_daily_df(daily_df))
 
 
 def parse_chart_group_data(group: ChartGroup) -> ChartGroupData:
