@@ -272,6 +272,36 @@ def process_daily_usage_dict(json_dict: dict) -> OutputDataFrames:
     return OutputDataFrames(raw=daily_df, aggregated=summarize_daily_df(daily_df))
 
 
+def interpolate_consumption_from_production(
+    production_data: OutputDataFrames,
+) -> OutputDataFrames:
+    """
+    Use production data to interpolate consumption values where possible.
+    """
+    prod_raw = production_data.raw.copy()
+
+    from_gen_cols = set(
+        [
+            "FromGenToBatt",
+            "FromGenToGrid",
+            "FromGenToConsumer",
+            "FromGenToSomewhere",
+            "FromGenToWattPilot",
+        ]
+    )
+
+    use_from_gen_cols = set(prod_raw) & from_gen_cols
+
+    if use_from_gen_cols:
+        prod_raw["FromGen"] = prod_raw.apply(
+            lambda row: sum(row[col] for col in use_from_gen_cols), 1
+        )
+
+    prod_raw = prod_raw.drop(labels=list(from_gen_cols), axis=1, errors="ignore")
+
+    return OutputDataFrames(prod_raw, summarize_daily_df(prod_raw))
+
+
 def parse_chart_group_data(group: ChartGroup) -> ChartGroupData:
     """
     Parse data from chart group.
