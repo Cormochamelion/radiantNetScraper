@@ -23,6 +23,14 @@
         "raw_data_type": [
             "raw_data",
             "location_type"
+        ],
+        "db_path": [
+            "database",
+            "path"
+        ],
+        "db_type": [
+            "database",
+            "location_type"
         ]
     },
     "config_hierarchy": [
