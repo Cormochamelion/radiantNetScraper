@@ -318,6 +318,9 @@ def parse_json_data_from_file_pair_list(
         kwargs["db_path"] = get_chosen_data_path()
     db_handler = Database(**kwargs)
 
+    LOGGER.debug("Parsing %s groups:", len(infile_groups))
+    LOGGER.debug("%s", infile_groups)
+
     _ = (
         infile_groups
         | pmap(load_chart_group)
