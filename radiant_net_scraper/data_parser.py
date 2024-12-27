@@ -158,7 +158,7 @@ def load_chart_group(group: ChartFileGroup) -> ChartGroup:
     )
 
 
-def calculate_col_kwh(raw_df=pd.DataFrame, agg_cols=list[str]) -> float:
+def calculate_col_kwh(raw_df=pd.DataFrame, agg_cols=list[str]) -> pd.DataFrame:
     """
     Calulate the work in kWh on each time step for a set of columns.
     """
