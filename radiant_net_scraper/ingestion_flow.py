@@ -21,8 +21,8 @@ def ingest_day(
     scraping_kwargs = scraping_kwargs or {}
     parsing_kwargs = parsing_kwargs or {}
 
-    output_files = run_scraper(**scraping_kwargs)
-    parse_json_data_from_file_pair_list(list(astuple(output_files)), **parsing_kwargs)
+    output_group = run_scraper(**scraping_kwargs)
+    parse_json_data_from_file_pair_list([output_group], **parsing_kwargs)
 
 
 def run_ingestion_continuously() -> None:
