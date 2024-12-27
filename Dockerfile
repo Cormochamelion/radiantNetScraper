@@ -7,4 +7,4 @@ COPY pyproject.toml ./pyproject.toml
 
 RUN pip3 install .
 
-ENTRYPOINT radiant-net-run
+ENTRYPOINT ["radiant-net-run"]
