@@ -19,6 +19,7 @@ authors = [{ name = "Cormochamelion", email = "cormocodran1.5@gmail.com" }]
 [project.optional-dependencies]
 development = [
     "black==22.12.*",
+    "genbadge[coverage]<=1.1",
     "pytest-cases<=3.8.5",
     "pytest-cov<=6.0",
     "pytest<=8.3",
