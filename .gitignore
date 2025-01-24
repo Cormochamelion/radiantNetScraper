@@ -5,3 +5,6 @@
 # pip install data
 build
 *.egg-info
+
+# test output
+coverage.xml
