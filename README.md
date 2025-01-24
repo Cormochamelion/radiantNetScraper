@@ -1,5 +1,7 @@
 # RadiantNet Scraper
 
+![Coverage](https://cormochamelion.github.io/radiantNetScraper/coverage.svg)
+
 Retrieval and storage of generation and usage data from Fronius Solarweb and
 similar systems.
 
