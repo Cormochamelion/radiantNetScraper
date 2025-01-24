@@ -7,6 +7,7 @@ from json import load
 import os
 from pytest_cases import fixture
 import re
+import time
 
 import radiant_net_scraper.fronius_session as fsession
 from radiant_net_scraper.fronius_session import _FroniusSession
@@ -52,3 +53,9 @@ def arbitrary_file_dummy_fronius_session(monkeypatch) -> None:
     )
 
     return None
+
+
+# Set the timezone to CET, needed to properly parse the example data, since that
+# was generated in that time zone.
+os.environ["TZ"] = "Europe/Berlin"
+time.tzset()
