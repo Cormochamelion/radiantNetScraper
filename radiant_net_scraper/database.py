@@ -114,6 +114,9 @@ class Database:
         """
         Insert a dataframe into the database.
         """
+        LOGGER.debug("Inserting data into table %s:", table_name)
+        LOGGER.debug("%s", df.to_csv())
+
         try:
             df.to_sql(table_name, self.db_conn, if_exists="append", index=False)
         except sqlite3.IntegrityError as e:
