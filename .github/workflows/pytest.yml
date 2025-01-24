@@ -1,0 +1,37 @@
+name: Python package
+
+on: [push]
+
+env:
+  DEFAULT_PYTHON_VERSION: "3.10"
+
+jobs:
+  test-and-report:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: setup.py
+
+      - name: Install package ${{ env.DEFAULT_PYTHON_VERSION }}
+        run: pip install -e .[development]
+
+      - name: Pytest ${{ env.DEFAULT_PYTHON_VERSION }}
+        run: pytest --cov --cov-report=xml
+      
+      - name: Generate Badge ${{ env.DEFAULT_PYTHON_VERSION }}
+        run: genbadge coverage -i coverage.xml -o ci_data/coverage.svg
+
+      - name: Deploy Badge ${{ env.DEFAULT_PYTHON_VERSION }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ci_data
