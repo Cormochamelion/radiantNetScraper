@@ -23,6 +23,14 @@ class _FroniusSession:
 
     def __init__(self, user, password, fronius_id):
         self.session = rq.Session()
+        self.session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) "
+                    "Gecko/20100101 Firefox/143.0"
+                )
+            }
+        )
         self.key_pattern = re.compile(r"(?<=&sessionDataKey=)[a-z0-9\-]*")
         self.session_key = None
         self.secret = {"username": user, "password": password, "id": fronius_id}
